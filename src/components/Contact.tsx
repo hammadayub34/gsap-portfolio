@@ -165,14 +165,13 @@ const Contact = () => {
     setErrors(newErrors);
     setTouched({ name: true, email: true, message: true });
 
-    if (Object.keys(newErrors).length > 0) {
-      // Shake animation for error
-      gsap.to(formRef.current, {
-        x: [-10, 10, -10, 10, 0],
-        duration: 0.5,
-        ease: 'power2.inOut',
-      });
-      return;
+    if (formRef.current) {
+      const tl = gsap.timeline();
+      tl.to(formRef.current, { x: -10, duration: 0.05 })
+        .to(formRef.current, { x: 10, duration: 0.05 })
+        .to(formRef.current, { x: -10, duration: 0.05 })
+        .to(formRef.current, { x: 10, duration: 0.05 })
+        .to(formRef.current, { x: 0, duration: 0.05 });
     }
 
     setIsSubmitting(true);
