@@ -7,7 +7,10 @@ import { Skill } from '@/types';
 const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const skillsRef = useRef<HTMLDivElement>(null);
+
+  // Refs for skill items and bars
+  const skillItemRefs = useRef<HTMLDivElement[]>([]);
+  const skillBarRefs = useRef<HTMLDivElement[]>([]);
 
   const skills: Skill[] = [
     { name: 'JavaScript/TypeScript', level: 95, category: 'frontend' },
@@ -20,54 +23,68 @@ const Skills = () => {
     { name: 'Docker/AWS', level: 75, category: 'tools' },
   ];
 
+  const categories = {
+    frontend: skills.filter((s) => s.category === 'frontend'),
+    backend: skills.filter((s) => s.category === 'backend'),
+    tools: skills.filter((s) => s.category === 'tools'),
+  };
+
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-      });
-
-      // Animate each skill bar
-      const skillBars = skillsRef.current?.querySelectorAll('.skill-bar');
-      skillBars?.forEach((bar, index) => {
-        gsap.from(bar, {
-          width: 0,
-          duration: 1.5,
-          ease: 'power2.out',
+      // Animate section title
+      if (titleRef.current && sectionRef.current) {
+        gsap.from(titleRef.current, {
+          opacity: 0,
+          y: 50,
+          duration: 1,
           scrollTrigger: {
-            trigger: bar,
-            start: 'top 85%',
+            trigger: sectionRef.current,
+            start: 'top 80%',
           },
-          delay: index * 0.1,
         });
-      });
+      }
 
       // Animate skill items
-      const skillItems = skillsRef.current?.querySelectorAll('.skill-item');
-      gsap.from(skillItems, {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: skillsRef.current,
-          start: 'top 80%',
-        },
-      });
+      if (skillItemRefs.current.length > 0) {
+        gsap.from(skillItemRefs.current, {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%',
+          },
+        });
+      }
+
+      // Animate skill bars
+      if (skillBarRefs.current.length > 0) {
+        skillBarRefs.current.forEach((bar, index) => {
+          gsap.from(bar, {
+            width: 0,
+            duration: 1.5,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: bar,
+              start: 'top 85%',
+            },
+            delay: index * 0.1,
+          });
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const categories = {
-    frontend: skills.filter((s) => s.category === 'frontend'),
-    backend: skills.filter((s) => s.category === 'backend'),
-    tools: skills.filter((s) => s.category === 'tools'),
+  // Helper to assign refs during map
+  const setSkillItemRef = (el: HTMLDivElement | null) => {
+    if (el && !skillItemRefs.current.includes(el)) skillItemRefs.current.push(el);
+  };
+
+  const setSkillBarRef = (el: HTMLDivElement | null) => {
+    if (el && !skillBarRefs.current.includes(el)) skillBarRefs.current.push(el);
   };
 
   return (
@@ -84,7 +101,7 @@ const Skills = () => {
           <span className="ml-8 h-px bg-textSecondary/30 flex-1 max-w-xs"></span>
         </h2>
 
-        <div ref={skillsRef} className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-12">
           {/* Frontend Skills */}
           <div className="space-y-6">
             <h3 className="text-2xl font-display text-textPrimary mb-6 flex items-center">
@@ -94,20 +111,21 @@ const Skills = () => {
               Frontend Development
             </h3>
             {categories.frontend.map((skill, index) => (
-              <div key={index} className="skill-item">
+              <div
+                key={index}
+                className="skill-item"
+                ref={setSkillItemRef}
+              >
                 <div className="flex justify-between mb-2">
-                  <span className="text-textPrimary font-mono text-sm">
-                    {skill.name}
-                  </span>
-                  <span className="text-accent font-mono text-sm">
-                    {skill.level}%
-                  </span>
+                  <span className="text-textPrimary font-mono text-sm">{skill.name}</span>
+                  <span className="text-accent font-mono text-sm">{skill.level}%</span>
                 </div>
                 <div className="h-2 bg-secondary rounded-full overflow-hidden">
                   <div
                     className="skill-bar h-full bg-gradient-to-r from-accent to-accent/70 rounded-full"
                     style={{ width: `${skill.level}%` }}
-                  ></div>
+                    ref={setSkillBarRef}
+                  />
                 </div>
               </div>
             ))}
@@ -122,26 +140,27 @@ const Skills = () => {
               Backend Development
             </h3>
             {categories.backend.map((skill, index) => (
-              <div key={index} className="skill-item">
+              <div
+                key={index}
+                className="skill-item"
+                ref={setSkillItemRef}
+              >
                 <div className="flex justify-between mb-2">
-                  <span className="text-textPrimary font-mono text-sm">
-                    {skill.name}
-                  </span>
-                  <span className="text-accent font-mono text-sm">
-                    {skill.level}%
-                  </span>
+                  <span className="text-textPrimary font-mono text-sm">{skill.name}</span>
+                  <span className="text-accent font-mono text-sm">{skill.level}%</span>
                 </div>
                 <div className="h-2 bg-secondary rounded-full overflow-hidden">
                   <div
                     className="skill-bar h-full bg-gradient-to-r from-accent to-accent/70 rounded-full"
                     style={{ width: `${skill.level}%` }}
-                  ></div>
+                    ref={setSkillBarRef}
+                  />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Tools & Others - Full Width */}
+          {/* Tools & Technologies */}
           <div className="md:col-span-2 space-y-6">
             <h3 className="text-2xl font-display text-textPrimary mb-6 flex items-center">
               <span className="w-12 h-12 rounded bg-accent/10 flex items-center justify-center mr-4 text-accent">
@@ -151,20 +170,21 @@ const Skills = () => {
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
               {categories.tools.map((skill, index) => (
-                <div key={index} className="skill-item">
+                <div
+                  key={index}
+                  className="skill-item"
+                  ref={setSkillItemRef}
+                >
                   <div className="flex justify-between mb-2">
-                    <span className="text-textPrimary font-mono text-sm">
-                      {skill.name}
-                    </span>
-                    <span className="text-accent font-mono text-sm">
-                      {skill.level}%
-                    </span>
+                    <span className="text-textPrimary font-mono text-sm">{skill.name}</span>
+                    <span className="text-accent font-mono text-sm">{skill.level}%</span>
                   </div>
                   <div className="h-2 bg-secondary rounded-full overflow-hidden">
                     <div
                       className="skill-bar h-full bg-gradient-to-r from-accent to-accent/70 rounded-full"
                       style={{ width: `${skill.level}%` }}
-                    ></div>
+                      ref={setSkillBarRef}
+                    />
                   </div>
                 </div>
               ))}
