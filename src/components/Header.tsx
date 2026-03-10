@@ -2,9 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { gsap } from '@/lib/gsapConfig';
-import { HiMenu, HiX, HiMoon, HiSun } from 'react-icons/hi';
-import { FaFilePdf } from 'react-icons/fa';
+import { gsap } from 'gsap';
+import { HiMoon, HiSun } from 'react-icons/hi';
 
 const Header = () => {
   const headerRef = useRef<HTMLElement>(null);
@@ -16,6 +15,15 @@ const Header = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('home');
   const [isDarkMode, setIsDarkMode] = useState(true);
+
+  // Apply theme class to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('light-theme');
+    } else {
+      document.documentElement.classList.add('light-theme');
+    }
+  }, [isDarkMode]);
 
   // Scroll detection and progress
   useEffect(() => {
@@ -113,106 +121,193 @@ const Header = () => {
   };
 
   const navItems = [
-    { name: 'Home', href: '/#home' },
-    { name: 'About', href: '/#about' },
-    { name: 'Skills', href: '/#skills' },
-    { name: 'Projects', href: '/#projects' },
-    { name: 'Contact', href: '/#contact' },
+    { name: 'Home', href: '#home' },
+    { name: 'About', href: '#about' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Contact', href: '#contact' },
   ];
 
   return (
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? 'bg-primary/95 backdrop-blur-md shadow-lg shadow-accent/5'
-            : 'bg-transparent'
-        }`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          transition: 'all 0.5s ease',
+          background: isScrolled ? 'rgba(13, 13, 13, 0.95)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(12px)' : 'none',
+          boxShadow: isScrolled ? '0 10px 30px rgba(212, 175, 55, 0.05)' : 'none',
+        }}
       >
         {/* Scroll progress bar */}
         <div
           ref={progressRef}
-          className="absolute top-0 left-0 h-1 bg-gradient-to-r from-accent via-accent/80 to-accent transition-all duration-200"
-          style={{ width: `${scrollProgress}%` }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '4px',
+            background: 'linear-gradient(to right, #d4af37, rgba(212, 175, 55, 0.8), #d4af37)',
+            transition: 'width 0.2s ease',
+            width: `${scrollProgress}%`,
+          }}
         />
 
-        <nav className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+        <nav className="container-custom" style={{ padding: '1rem 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             {/* Logo with enhanced design */}
             <Link
               ref={logoRef}
               href="/"
-              className="relative group"
+              style={{
+                position: 'relative',
+                display: 'block',
+              }}
               onMouseEnter={handleLogoHover}
             >
-              <div className="relative">
-                {/* Hexagon background - removed rounded */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg width="50" height="50" viewBox="0 0 50 50" className="text-accent">
+              <div style={{ position: 'relative' }}>
+                {/* Hexagon background */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <svg width="50" height="50" viewBox="0 0 50 50" style={{ color: '#d4af37' }}>
                     <polygon
                       points="25,5 45,15 45,35 25,45 5,35 5,15"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
-                      className="group-hover:fill-accent/10 transition-all duration-300"
+                      style={{ transition: 'all 0.3s ease' }}
                     />
                   </svg>
                 </div>
-                <span className="relative z-10 text-2xl font-display font-bold text-accent block w-[50px] h-[50px] flex items-center justify-center">
-                  P
+                <span style={{
+                  position: 'relative',
+                  zIndex: 10,
+                  fontSize: '1.5rem',
+                  fontFamily: 'Crimson Pro, serif',
+                  fontWeight: 700,
+                  color: '#d4af37',
+                  display: 'flex',
+                  width: '50px',
+                  height: '50px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  H
                 </span>
               </div>
               
               {/* Tooltip */}
-              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-secondary px-3 py-1 text-xs font-body text-textSecondary opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap uppercase tracking-wider">
+              <span className="logo-tooltip" style={{
+                position: 'absolute',
+                bottom: '-2rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: '#1a1a1a',
+                padding: '0.25rem 0.75rem',
+                fontSize: '0.75rem',
+                fontFamily: 'Archivo, sans-serif',
+                color: '#b8b4a8',
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+                whiteSpace: 'nowrap',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                pointerEvents: 'none',
+              }}>
                 Portfolio
               </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <ul className="hidden md:flex items-center space-x-8">
+            <ul className="desktop-nav" style={{
+              display: 'none',
+              alignItems: 'center',
+              gap: '2rem',
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+            }}>
               {navItems.map((item, index) => (
                 <li key={item.name} className="nav-item">
                   <Link
                     href={item.href}
-                    className={`relative text-textSecondary hover:text-accent transition-colors duration-300 font-mono text-sm group ${
-                      activeSection === item.name.toLowerCase() ? 'text-accent' : ''
-                    }`}
+                    style={{
+                      position: 'relative',
+                      color: activeSection === item.name.toLowerCase() ? '#d4af37' : '#b8b4a8',
+                      transition: 'color 0.3s ease',
+                      textDecoration: 'none',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      fontSize: '0.875rem',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#d4af37';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeSection !== item.name.toLowerCase()) {
+                        e.currentTarget.style.color = '#b8b4a8';
+                      }
+                    }}
                   >
-                    <span className="text-accent mr-1 font-mono">0{index + 1}.</span>
-                    <span className="relative font-body uppercase tracking-wider">
+                    <span style={{ color: '#d4af37', marginRight: '0.25rem', fontFamily: 'IBM Plex Mono, monospace' }}>
+                      0{index + 1}.
+                    </span>
+                    <span style={{
+                      position: 'relative',
+                      fontFamily: 'Archivo, sans-serif',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                    }}>
                       {item.name}
-                      <span className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
-                        activeSection === item.name.toLowerCase() 
-                          ? 'w-full' 
-                          : 'w-0 group-hover:w-full'
-                      }`}></span>
+                      <span style={{
+                        position: 'absolute',
+                        bottom: '-0.25rem',
+                        left: 0,
+                        height: '1px',
+                        background: '#d4af37',
+                        transition: 'width 0.3s ease',
+                        width: activeSection === item.name.toLowerCase() ? '100%' : '0',
+                      }}></span>
                     </span>
                   </Link>
                 </li>
               ))}
               
-              {/* Resume button with icon */}
-              <li className="nav-item">
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative px-6 py-2 border-2 border-accent text-accent hover:bg-accent/10 transition-all duration-300 font-body text-sm overflow-hidden flex items-center gap-2 uppercase tracking-wider font-semibold"
-                >
-                  <span className="absolute inset-0 bg-accent/5 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-                  <FaFilePdf className="relative z-10" />
-                  <span className="relative z-10">Resume</span>
-                </a>
-              </li>
-
               {/* Theme toggle */}
               <li className="nav-item">
                 <button
                   onClick={() => setIsDarkMode(!isDarkMode)}
-                  className="p-2 rounded-full bg-secondary/50 hover:bg-accent/10 text-accent transition-all duration-300 hover:scale-110"
+                  suppressHydrationWarning
+                  style={{
+                    padding: '0.5rem',
+                    borderRadius: '50%',
+                    background: 'rgba(26, 26, 26, 0.5)',
+                    color: '#d4af37',
+                    transition: 'all 0.3s ease',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
                   aria-label="Toggle theme"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(26, 26, 26, 0.5)';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
                 >
                   {isDarkMode ? <HiSun size={20} /> : <HiMoon size={20} />}
                 </button>
@@ -220,37 +315,90 @@ const Header = () => {
             </ul>
 
             {/* Mobile Menu Button with animation */}
-            <div className="md:hidden flex items-center gap-4">
+            <div className="mobile-controls" style={{
+              display: 'none',
+              alignItems: 'center',
+              gap: '1rem',
+            }}>
               {/* Mobile theme toggle */}
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 rounded-full bg-secondary/50 hover:bg-accent/10 text-accent transition-all duration-300"
+                suppressHydrationWarning
+                style={{
+                  padding: '0.5rem',
+                  borderRadius: '50%',
+                  background: 'rgba(26, 26, 26, 0.5)',
+                  color: '#d4af37',
+                  transition: 'all 0.3s ease',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
                 aria-label="Toggle theme"
               >
                 {isDarkMode ? <HiSun size={20} /> : <HiMoon size={20} />}
               </button>
 
               <button
-                className="relative z-50 text-accent text-3xl p-2 rounded-lg hover:bg-accent/10 transition-all duration-300"
+                style={{
+                  position: 'relative',
+                  zIndex: 50,
+                  color: '#d4af37',
+                  fontSize: '1.875rem',
+                  padding: '0.5rem',
+                  borderRadius: '0.5rem',
+                  transition: 'all 0.3s ease',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
                 onClick={toggleMenu}
+                suppressHydrationWarning
                 aria-label="Toggle menu"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
               >
-                <div className="relative w-6 h-6 flex items-center justify-center">
-                  <span
-                    className={`absolute block w-6 h-0.5 bg-accent transition-all duration-300 ${
-                      isMenuOpen ? 'rotate-45' : '-translate-y-2'
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute block w-6 h-0.5 bg-accent transition-all duration-300 ${
-                      isMenuOpen ? 'opacity-0' : 'opacity-100'
-                    }`}
-                  ></span>
-                  <span
-                    className={`absolute block w-6 h-0.5 bg-accent transition-all duration-300 ${
-                      isMenuOpen ? '-rotate-45' : 'translate-y-2'
-                    }`}
-                  ></span>
+                <div style={{
+                  position: 'relative',
+                  width: '1.5rem',
+                  height: '1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <span style={{
+                    position: 'absolute',
+                    display: 'block',
+                    width: '1.5rem',
+                    height: '2px',
+                    background: '#d4af37',
+                    transition: 'all 0.3s ease',
+                    transform: isMenuOpen ? 'rotate(45deg)' : 'translateY(-0.5rem)',
+                  }}></span>
+                  <span style={{
+                    position: 'absolute',
+                    display: 'block',
+                    width: '1.5rem',
+                    height: '2px',
+                    background: '#d4af37',
+                    transition: 'all 0.3s ease',
+                    opacity: isMenuOpen ? 0 : 1,
+                  }}></span>
+                  <span style={{
+                    position: 'absolute',
+                    display: 'block',
+                    width: '1.5rem',
+                    height: '2px',
+                    background: '#d4af37',
+                    transition: 'all 0.3s ease',
+                    transform: isMenuOpen ? 'rotate(-45deg)' : 'translateY(0.5rem)',
+                  }}></span>
                 </div>
               </button>
             </div>
@@ -260,59 +408,167 @@ const Header = () => {
 
       {/* Mobile Menu with enhanced design */}
       <div
-        className={`mobile-menu fixed inset-0 bg-secondary/98 backdrop-blur-lg md:hidden z-40 transition-transform duration-300 ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className="mobile-menu"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(26, 26, 26, 0.98)',
+          backdropFilter: 'blur(16px)',
+          zIndex: 40,
+          transition: 'transform 0.3s ease',
+          transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+          display: 'none',
+        }}
       >
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+          pointerEvents: 'none',
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '25%',
+            right: '25%',
+            width: '24rem',
+            height: '24rem',
+            background: 'rgba(212, 175, 55, 0.05)',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+          }}></div>
+          <div style={{
+            position: 'absolute',
+            bottom: '25%',
+            left: '25%',
+            width: '24rem',
+            height: '24rem',
+            background: 'rgba(212, 175, 55, 0.05)',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+          }}></div>
         </div>
 
-        <div className="relative h-full flex flex-col">
+        <div style={{
+          position: 'relative',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
           {/* Navigation items */}
-          <ul className="flex-1 flex flex-col items-center justify-center space-y-8 px-8">
+          <ul style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '2rem',
+            padding: '0 2rem',
+            listStyle: 'none',
+            margin: 0,
+          }}>
             {navItems.map((item, index) => (
-              <li key={item.name} className="mobile-nav-item w-full">
+              <li key={item.name} className="mobile-nav-item" style={{ width: '100%' }}>
                 <Link
                   href={item.href}
                   onClick={toggleMenu}
-                  className={`block text-center text-2xl text-textSecondary hover:text-accent transition-all duration-300 font-body py-4 px-6 hover:bg-accent/5 ${
-                    activeSection === item.name.toLowerCase() ? 'text-accent bg-accent/5' : ''
-                  }`}
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    fontSize: '1.5rem',
+                    color: activeSection === item.name.toLowerCase() ? '#d4af37' : '#b8b4a8',
+                    transition: 'all 0.3s ease',
+                    fontFamily: 'Archivo, sans-serif',
+                    padding: '1rem 1.5rem',
+                    textDecoration: 'none',
+                    background: activeSection === item.name.toLowerCase() ? 'rgba(212, 175, 55, 0.05)' : 'transparent',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#d4af37';
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeSection !== item.name.toLowerCase()) {
+                      e.currentTarget.style.color = '#b8b4a8';
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
                 >
-                  <span className="text-accent mr-2">0{index + 1}.</span>
+                  <span style={{ color: '#d4af37', marginRight: '0.5rem' }}>0{index + 1}.</span>
                   {item.name}
                 </Link>
               </li>
             ))}
             
-            {/* Mobile resume button */}
-            <li className="mobile-nav-item pt-4">
-              <a
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-3 border-2 border-accent text-accent hover:bg-accent/10 text-xl transition-all duration-300 font-body uppercase tracking-wider font-semibold"
-              >
-                <FaFilePdf />
-                Resume
-              </a>
-            </li>
           </ul>
 
           {/* Footer info */}
-          <div className="mobile-nav-item pb-8 px-8 text-center">
-            <p className="text-textSecondary text-sm font-body tracking-wider">
+          <div className="mobile-nav-item" style={{
+            paddingBottom: '2rem',
+            padding: '0 2rem 2rem',
+            textAlign: 'center',
+          }}>
+            <p style={{
+              color: '#b8b4a8',
+              fontSize: '0.875rem',
+              fontFamily: 'Archivo, sans-serif',
+              letterSpacing: '0.1em',
+            }}>
               Built with Next.js & Tailwind CSS
             </p>
           </div>
         </div>
 
         {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(100,255,218,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(100,255,218,0.02)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none"></div>
+        <div className="bg-grid-pattern" style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+        }}></div>
       </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (min-width: 768px) {
+          .desktop-nav {
+            display: flex !important;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .mobile-controls {
+            display: flex !important;
+          }
+          .mobile-menu {
+            display: block !important;
+          }
+        }
+
+        a:hover .logo-tooltip {
+          opacity: 1 !important;
+        }
+
+        .nav-item a span:last-child::after {
+          content: '';
+          position: absolute;
+          bottom: -0.25rem;
+          left: 0;
+          width: 0;
+          height: 1px;
+          background: #d4af37;
+          transition: width 0.3s ease;
+        }
+
+        .nav-item a:hover span:last-child::after {
+          width: 100%;
+        }
+
+        svg:hover polygon {
+          fill: rgba(212, 175, 55, 0.1);
+        }
+      `}} />
     </>
   );
 };

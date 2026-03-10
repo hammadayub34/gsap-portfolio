@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { gsap, ScrollTrigger } from '@/lib/gsapConfig';
 import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 
 const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -11,11 +13,15 @@ const About = () => {
   const imageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
       gsap.from(titleRef.current, {
         opacity: 0,
-        y: 50,
-        duration: 1,
+        y: 60,
+        duration: 1.2,
+        ease: 'power4.out',
+        immediateRender: false,
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top 80%',
@@ -24,8 +30,10 @@ const About = () => {
 
       gsap.from(contentRef.current, {
         opacity: 0,
-        x: -50,
-        duration: 1,
+        x: -60,
+        duration: 1.1,
+        ease: 'power4.out',
+        immediateRender: false,
         scrollTrigger: {
           trigger: contentRef.current,
           start: 'top 80%',
@@ -34,75 +42,197 @@ const About = () => {
 
       gsap.from(imageRef.current, {
         opacity: 0,
-        x: 50,
-        duration: 1,
+        x: 60,
+        duration: 1.1,
+        ease: 'power4.out',
+        immediateRender: false,
         scrollTrigger: {
           trigger: imageRef.current,
           start: 'top 80%',
         },
       });
+
+      // Stagger the tech list items
+      const techItems = contentRef.current?.querySelectorAll('li');
+      if (techItems && techItems.length > 0) {
+        gsap.from(techItems, {
+          opacity: 0,
+          x: -20,
+          duration: 0.5,
+          stagger: 0.07,
+          ease: 'power3.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: contentRef.current,
+            start: 'top 65%',
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   const technologies = [
-    'JavaScript (ES6+)',
-    'TypeScript',
+    'Node.js / Fastify',
+    'Python / FastAPI',
+    'MongoDB / PostgreSQL',
+    'Docker / AWS',
+    'HubSpot / GoHighLevel',
+    'Zapier / Make / n8n',
     'React / Next.js',
-    'Node.js',
-    'Python',
-    'PostgreSQL',
-    'MongoDB',
-    'AWS',
+    'REST APIs / Microservices',
   ];
 
   return (
     <section
       id="about"
       ref={sectionRef}
-      className="py-20 px-6 min-h-screen flex items-center"
+      style={{
+        padding: '5rem 1.5rem',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      <div className="container mx-auto max-w-6xl">
+      {/* Background decorative elements */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '15%',
+          right: '10%',
+          width: '28rem',
+          height: '28rem',
+          background: 'rgba(212, 175, 55, 0.06)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '15%',
+          left: '5%',
+          width: '22rem',
+          height: '22rem',
+          background: 'rgba(212, 175, 55, 0.04)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+        }} />
+      </div>
+
+      {/* Grid pattern overlay */}
+      <div className="bg-grid-pattern" style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        opacity: 0.15,
+      }} />
+
+      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
         {/* Section Title */}
-        <h2 ref={titleRef} className="text-textPrimary mb-16 flex items-center">
-          <span className="font-mono text-accent text-2xl mr-4">01.</span>
+        <h2 
+          ref={titleRef} 
+          style={{
+            color: '#f5f1e8',
+            marginBottom: '4rem',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontFamily: 'Crimson Pro, serif',
+            fontWeight: 700,
+          }}
+        >
+          <span style={{
+            fontFamily: 'IBM Plex Mono, monospace',
+            color: '#d4af37',
+            fontSize: '1.5rem',
+            marginRight: '1rem',
+          }}>
+            01.
+          </span>
           About Me
-          <span className="ml-8 h-px bg-textSecondary/30 flex-1 max-w-xs"></span>
+          <span style={{
+            marginLeft: '2rem',
+            height: '1px',
+            background: 'rgba(184, 180, 168, 0.3)',
+            flex: '1',
+            maxWidth: '20rem',
+          }}></span>
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gap: '3rem',
+          alignItems: 'center',
+        }}>
           {/* Content */}
-          <div ref={contentRef} className="space-y-6">
-            <p className="text-textSecondary leading-relaxed">
-              Hello! I'm <span className="text-accent font-semibold">Your Name</span>, 
-              a passionate developer who loves creating things that live on the internet. 
-              My interest in web development started back in 2018 when I decided to try 
-              building my first website — turns out hacking together custom layouts taught 
-              me a lot about HTML & CSS!
+          <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <p style={{
+              color: '#b8b4a8',
+              lineHeight: 1.8,
+              fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+            }}>
+              Hello! I&apos;m <span style={{ color: '#d4af37', fontWeight: 600 }}>Hammad Ayub</span>,
+              a results-driven backend engineer and CRM automation specialist based in
+              Islamabad, Pakistan. With 2+ years of experience, I design and implement
+              scalable web, IoT, and business process automation solutions.
             </p>
 
-            <p className="text-textSecondary leading-relaxed">
-              Fast-forward to today, and I've had the privilege of working at a startup, 
-              a corporation, and a digital agency. My main focus these days is building 
-              accessible, inclusive products and digital experiences for a variety of clients.
+            <p style={{
+              color: '#b8b4a8',
+              lineHeight: 1.8,
+              fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+            }}>
+              Currently working as a <span style={{ color: '#d4af37', fontWeight: 600 }}>Design Engineer at CARE</span>{' '}
+              (Center For Advanced Research In Engineering), building backend systems with
+              Node.js, Fastify, Python, FastAPI, and MongoDB — deployed on AWS EC2 and Lambda
+              for real-time IoT data pipelines.
             </p>
 
-            <p className="text-textSecondary leading-relaxed">
-              I also recently launched a course that covers everything you need to know 
-              to build a web app with the Spotify API.
+            <p style={{
+              color: '#b8b4a8',
+              lineHeight: 1.8,
+              fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+            }}>
+              Alongside, I work as a freelance <span style={{ color: '#d4af37', fontWeight: 600 }}>CRM & Automation Consultant</span>,
+              building workflows on HubSpot, GoHighLevel, and Zoho One — integrating
+              platforms using Zapier, Make, and n8n to streamline operations and drive growth.
             </p>
 
             <div>
-              <p className="text-textSecondary mb-4">
-                Here are a few technologies I've been working with recently:
+              <p style={{
+                color: '#b8b4a8',
+                marginBottom: '1rem',
+                fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+              }}>
+                Here are a few technologies I&apos;ve been working with recently:
               </p>
-              <ul className="grid grid-cols-2 gap-2 font-mono text-sm">
+              <ul style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '0.5rem',
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: '0.875rem',
+                listStyle: 'none',
+                padding: 0,
+              }}>
                 {technologies.map((tech, index) => (
                   <li
                     key={index}
-                    className="flex items-center text-textSecondary before:content-['▹'] before:text-accent before:mr-2"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: '#b8b4a8',
+                    }}
                   >
+                    <span style={{ color: '#d4af37', marginRight: '0.5rem' }}>▹</span>
                     {tech}
                   </li>
                 ))}
@@ -111,23 +241,82 @@ const About = () => {
           </div>
 
           {/* Profile Image */}
-          <div ref={imageRef} className="relative group">
-            <div className="relative w-full max-w-sm mx-auto">
+          <div ref={imageRef} style={{ position: 'relative' }}>
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              maxWidth: '28rem',
+              margin: '0 auto',
+            }}>
               {/* Image container */}
-              <div className="relative z-10 rounded overflow-hidden">
-                <div className="absolute inset-0 bg-accent/20 mix-blend-multiply group-hover:bg-transparent transition-all duration-300 z-10"></div>
-                <div className="relative aspect-square bg-secondary/50 flex items-center justify-center">
-                  {/* Placeholder - Replace with actual image */}
-                  <div className="text-accent text-6xl">👤</div>
-                </div>
+              <div style={{
+                position: 'relative',
+                zIndex: 10,
+                borderRadius: '0',
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(212, 175, 55, 0.2)',
+                  mixBlendMode: 'multiply',
+                  zIndex: 10,
+                  transition: 'all 0.3s ease',
+                }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.2)';
+                  }}
+                ></div>
+                <Image
+                  src="/profile.jpg"
+                  alt="Hammad Ayub"
+                  width={448}
+                  height={448}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
+                />
               </div>
 
               {/* Border decoration */}
-              <div className="absolute top-6 left-6 w-full h-full border-2 border-accent rounded -z-10 group-hover:top-4 group-hover:left-4 transition-all duration-300"></div>
+              <div style={{
+                position: 'absolute',
+                top: '1.5rem',
+                left: '1.5rem',
+                width: '100%',
+                height: '100%',
+                border: '2px solid #d4af37',
+                borderRadius: '0',
+                zIndex: -1,
+                transition: 'all 0.3s ease',
+              }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.top = '1rem';
+                  e.currentTarget.style.left = '1rem';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.top = '1.5rem';
+                  e.currentTarget.style.left = '1.5rem';
+                }}
+              ></div>
             </div>
           </div>
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (min-width: 768px) {
+          #about > div > div:last-child {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+      `}} />
     </section>
   );
 };

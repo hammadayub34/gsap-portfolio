@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { gsap } from '@/lib/gsapConfig';
+import Link from 'next/link';
+import { gsap } from 'gsap';
 import { FaArrowDown, FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
-
-// Using gold (#d4af37) color scheme from refined editorial aesthetic
+import AnimatedText from './AnimatedText';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -18,9 +17,9 @@ const Hero = () => {
   const [typedText, setTypedText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [particlePositions, setParticlePositions] = useState<Array<{ left: number; top: number }>>([]);
-  const fullText = "I build things for the web.";
+  const fullText = "Backend Engineer & CRM Specialist.";
 
-  // Generate particle positions on client side only to avoid hydration mismatch
+  // Generate particle positions on client side only
   useEffect(() => {
     const positions = Array.from({ length: 20 }, () => ({
       left: Math.random() * 100,
@@ -59,54 +58,32 @@ const Hero = () => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Stagger fade-in for main content
-      tl.from(titleRef.current, {
-        y: 100,
-        opacity: 0,
-        duration: 1.2,
-        ease: 'power4.out',
-      })
-        .from(
+      // Stagger fade-in for main content — title handled by AnimatedText
+      tl.from(
           subtitleRef.current,
           {
             y: 100,
             opacity: 0,
             duration: 1.2,
             ease: 'power4.out',
-          },
-          '-=0.8'
+            delay: 0.9,
+          }
         )
         .from(
           descRef.current,
           {
-            y: 50,
+            y: 40,
             opacity: 0,
             duration: 1,
-            ease: 'power3.out',
-          },
-          '-=0.6'
-        )
-        .from(
-          ctaRef.current?.children || [],
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'back.out(1.2)',
-          },
-          '-=0.4'
-        )
-        .from(
-          socialRef.current?.children || [],
-          {
-            x: -30,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power2.out',
+            ease: 'power4.out',
           },
           '-=0.5'
+        )
+        .fromTo(
+          ctaRef.current,
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: 'back.out(1.7)' },
+          '-=0.4'
         );
 
       // Floating particles animation
@@ -123,6 +100,7 @@ const Hero = () => {
           });
         });
       }
+
 
       // Background gradient animation
       gsap.to('.gradient-blob-1', {
@@ -147,6 +125,23 @@ const Hero = () => {
 
     return () => ctx.revert();
   }, [particlePositions]);
+
+  // Hide social icons when hero scrolls out of view
+  useEffect(() => {
+    const heroEl = heroRef.current;
+    const socialEl = socialRef.current;
+    if (!heroEl || !socialEl) return;
+
+    socialEl.style.transition = 'opacity 0.3s ease';
+
+    const handleScroll = () => {
+      const heroBottom = heroEl.getBoundingClientRect().bottom;
+      socialEl.style.opacity = heroBottom <= 0 ? '0' : '1';
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Mouse parallax effect
   useEffect(() => {
@@ -180,26 +175,79 @@ const Hero = () => {
     <section
       id="home"
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-gradient-to-br from-primary via-primary to-secondary"
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '6rem 1.5rem 10rem',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%)',
+      }}
     >
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         {/* Gradient blobs */}
-        <div className="gradient-blob-1 absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
-        <div className="gradient-blob-2 absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+        <div 
+          className="gradient-blob-1" 
+          style={{
+            position: 'absolute',
+            top: '25%',
+            left: '25%',
+            width: '24rem',
+            height: '24rem',
+            background: 'rgba(212, 175, 55, 0.1)',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+          }}
+        ></div>
+        <div 
+          className="gradient-blob-2" 
+          style={{
+            position: 'absolute',
+            bottom: '25%',
+            right: '25%',
+            width: '24rem',
+            height: '24rem',
+            background: 'rgba(212, 175, 55, 0.1)',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+          }}
+        ></div>
         
         {/* Additional ambient lights */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent"></div>
-        <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent"></div>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(ellipse at top left, rgba(212, 175, 55, 0.05), transparent)',
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(ellipse at bottom right, rgba(212, 175, 55, 0.05), transparent)',
+        }}></div>
       </div>
 
       {/* Floating particles */}
-      <div ref={particlesRef} className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div ref={particlesRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         {particlePositions.map((pos, i) => (
           <div
             key={i}
-            className="particle absolute w-2 h-2 bg-accent/30 rounded-full blur-sm"
+            className="particle"
             style={{
+              position: 'absolute',
+              width: '0.5rem',
+              height: '0.5rem',
+              background: 'rgba(212, 175, 55, 0.3)',
+              borderRadius: '50%',
+              filter: 'blur(2px)',
               left: `${pos.left}%`,
               top: `${pos.top}%`,
             }}
@@ -210,23 +258,55 @@ const Hero = () => {
       {/* Side social links */}
       <div
         ref={socialRef}
-        className="fixed left-8 bottom-0 hidden lg:flex flex-col items-center space-y-6 z-10"
+        className="side-social-links"
+        style={{
+          position: 'fixed',
+          left: '2rem',
+          bottom: 0,
+          display: 'none',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.5rem',
+          zIndex: 10,
+        }}
       >
         <a
-          href="https://github.com"
+          href="https://github.com/hammadayub34"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-textSecondary hover:text-accent hover:-translate-y-1 transition-all duration-300"
+          style={{
+            color: '#b8b4a8',
+            transition: 'all 0.3s ease',
+          }}
           aria-label="GitHub"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#d4af37';
+            e.currentTarget.style.transform = 'translateY(-4px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#b8b4a8';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
         >
           <FaGithub size={24} />
         </a>
         <a
-          href="https://linkedin.com"
+          href="https://linkedin.com/in/hammadayub34"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-textSecondary hover:text-accent hover:-translate-y-1 transition-all duration-300"
+          style={{
+            color: '#b8b4a8',
+            transition: 'all 0.3s ease',
+          }}
           aria-label="LinkedIn"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#d4af37';
+            e.currentTarget.style.transform = 'translateY(-4px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#b8b4a8';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
         >
           <FaLinkedin size={24} />
         </a>
@@ -234,142 +314,326 @@ const Hero = () => {
           href="https://twitter.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-textSecondary hover:text-accent hover:-translate-y-1 transition-all duration-300"
+          style={{
+            color: '#b8b4a8',
+            transition: 'all 0.3s ease',
+          }}
           aria-label="Twitter"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#d4af37';
+            e.currentTarget.style.transform = 'translateY(-4px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#b8b4a8';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
         >
           <FaTwitter size={24} />
         </a>
         <a
-          href="mailto:your.email@example.com"
-          className="text-textSecondary hover:text-accent hover:-translate-y-1 transition-all duration-300"
+          href="mailto:hammadayub34@gmail.com"
+          style={{
+            color: '#b8b4a8',
+            transition: 'all 0.3s ease',
+          }}
           aria-label="Email"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#d4af37';
+            e.currentTarget.style.transform = 'translateY(-4px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#b8b4a8';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
         >
           <FaEnvelope size={24} />
         </a>
-        <div className="w-px h-24 bg-textSecondary/50"></div>
+        <div style={{ width: '1px', height: '6rem', background: 'rgba(184, 180, 168, 0.5)' }}></div>
       </div>
 
       {/* Side email */}
-      <div className="fixed right-8 bottom-0 hidden lg:flex flex-col items-center space-y-6 z-10">
+      <div 
+        className="side-email-link"
+        style={{
+          position: 'fixed',
+          right: '2rem',
+          bottom: 0,
+          display: 'none',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.5rem',
+          zIndex: 10,
+        }}
+      >
         <a
-          href="mailto:your.email@example.com"
-          className="text-textSecondary hover:text-accent transition-all duration-300 font-mono text-sm tracking-widest"
-          style={{ writingMode: 'vertical-rl' }}
+          href="mailto:hammadayub34@gmail.com"
+          style={{
+            color: '#b8b4a8',
+            transition: 'all 0.3s ease',
+            fontFamily: 'IBM Plex Mono, monospace',
+            fontSize: '0.875rem',
+            letterSpacing: '0.1em',
+            writingMode: 'vertical-rl',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#d4af37';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#b8b4a8';
+          }}
         >
-          your.email@example.com
+          hammadayub34@gmail.com
         </a>
-        <div className="w-px h-24 bg-textSecondary/50"></div>
+        <div style={{ width: '1px', height: '6rem', background: 'rgba(184, 180, 168, 0.5)' }}></div>
       </div>
 
-      <div className="container mx-auto max-w-6xl relative z-10">
-        <div className="text-center space-y-8">
-          {/* Greeting with fade-in */}
-          <div className="parallax-layer-1">
-            <p className="font-mono text-accent text-lg md:text-xl animate-fade-in">
+      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
+        <div style={{ textAlign: 'center' }}>
+          {/* Greeting */}
+          <div className="parallax-layer-1 animate-fade-in">
+            <p style={{
+              fontFamily: 'IBM Plex Mono, monospace',
+              color: '#d4af37',
+              fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+              marginBottom: '2rem',
+            }}>
               Hi, my name is
             </p>
           </div>
 
-          {/* Main Title with glowing effect */}
-          <div className="parallax-layer-2">
+          {/* Main Title */}
+          <div className="parallax-layer-2" style={{ marginBottom: '1.5rem' }}>
             <h1
-              ref={titleRef}
-              className="font-display font-bold text-textPrimary text-5xl md:text-7xl lg:text-8xl relative"
+              style={{
+                fontFamily: 'Crimson Pro, serif',
+                fontWeight: 900,
+                color: '#f5f1e8',
+                fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                position: 'relative',
+              }}
             >
-              <span className="relative inline-block">
-                Your Name
-                <span className="absolute -inset-1 bg-accent/20 blur-2xl -z-10"></span>
+              <span style={{ position: 'relative', display: 'inline-block' }}>
+                <AnimatedText
+                  text="Hammad Ayub"
+                  animationType="flip"
+                  delay={0.3}
+                  staggerDelay={0.05}
+                />
+                <span style={{
+                  position: 'absolute',
+                  inset: '-0.25rem',
+                  background: 'rgba(212, 175, 55, 0.2)',
+                  filter: 'blur(30px)',
+                  zIndex: -1,
+                }}></span>
               </span>
             </h1>
           </div>
 
-          {/* Subtitle with typewriter effect */}
-          <div className="parallax-layer-1">
+          {/* Subtitle with typewriter */}
+          <div className="parallax-layer-1" style={{ marginBottom: '2rem' }}>
             <h2
               ref={subtitleRef}
-              className="font-display font-semibold text-textSecondary text-3xl md:text-5xl lg:text-6xl min-h-[4rem] md:min-h-[5rem]"
+              style={{
+                fontFamily: 'Crimson Pro, serif',
+                fontWeight: 600,
+                color: '#b8b4a8',
+                fontSize: 'clamp(1.75rem, 5vw, 3.5rem)',
+                lineHeight: 1.2,
+                minHeight: '4rem',
+              }}
             >
               {typedText}
-              <span className={`inline-block w-1 h-8 md:h-12 bg-accent ml-1 ${showCursor ? 'opacity-100' : 'opacity-0'}`}></span>
+              <span style={{
+                display: 'inline-block',
+                width: '3px',
+                height: 'clamp(2rem, 4vw, 3rem)',
+                background: '#d4af37',
+                marginLeft: '0.25rem',
+                opacity: showCursor ? 1 : 0,
+                transition: 'opacity 0.1s',
+              }}></span>
             </h2>
           </div>
 
-          {/* Description with enhanced styling */}
-          <div className="parallax-layer-2">
+          {/* Description */}
+          <div className="parallax-layer-2" style={{ marginBottom: '3rem' }}>
             <p
               ref={descRef}
-              className="max-w-2xl mx-auto text-textSecondary text-lg md:text-xl leading-relaxed"
+              style={{
+                maxWidth: '42rem',
+                margin: '0 auto',
+                color: '#b8b4a8',
+                fontSize: 'clamp(1rem, 2vw, 1.125rem)',
+                lineHeight: 1.8,
+              }}
             >
-              I'm a <span className="text-accent font-semibold">full-stack developer</span> specializing in building exceptional
-              digital experiences. Currently, I'm focused on building{' '}
-              <span className="text-accent font-semibold">accessible, human-centered products</span> using modern technologies
-              like React, Next.js, and Node.js.
+              Results-driven <span style={{ color: '#d4af37', fontWeight: 600 }}>backend engineer</span> with 2+ years of experience
+              building scalable web, IoT, and automation solutions. Specialized in{' '}
+              <span style={{ color: '#d4af37', fontWeight: 600 }}>Node.js, Python, and CRM automation</span> using
+              HubSpot, GoHighLevel, and Zoho.
             </p>
           </div>
 
-          {/* CTA Buttons with enhanced hover effects */}
-          <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-            <a
-              href="/#projects"
-              className="group relative px-8 py-4 bg-transparent border-2 border-accent text-accent overflow-hidden transition-all duration-300 font-body font-semibold hover:scale-105 uppercase tracking-wider text-sm"
-            >
-              <span className="absolute inset-0 bg-accent/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-              <span className="relative flex items-center gap-2">
-                View My Work
-                <span className="inline-block group-hover:translate-x-1 transition-transform">
-                  →
-                </span>
-              </span>
-            </a>
-            <a
-              href="/#contact"
-              className="group relative px-8 py-4 bg-accent text-primary overflow-hidden transition-all duration-300 font-body font-semibold shadow-gold hover:shadow-gold-lg hover:scale-105 uppercase tracking-wider text-sm"
-            >
-              <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-              <span className="relative">Get In Touch</span>
-            </a>
-          </div>
-
-          {/* Tech stack badges */}
-          <div className="flex flex-wrap justify-center gap-3 pt-8">
-            {['React', 'TypeScript', 'Next.js', 'Node.js', 'Tailwind'].map((tech, index) => (
-              <span
-                key={tech}
-                className="px-4 py-2 bg-secondary/50 border border-accent/30 text-textSecondary rounded-none text-sm font-mono backdrop-blur-sm hover:bg-accent/10 hover:border-accent transition-all duration-300 cursor-default uppercase tracking-wider"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-
-          {/* Scroll indicator with enhanced animation */}
-          <button
-            onClick={scrollToProjects}
-            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 group cursor-pointer"
-            aria-label="Scroll to projects"
+          {/* CTA Buttons */}
+          <div
+            ref={ctaRef}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '1rem',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: '2rem',
+              flexWrap: 'wrap',
+              opacity: 0,
+            }}
           >
-            <span className="text-textSecondary text-sm font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Scroll Down
-            </span>
-            <div className="animate-bounce">
-              <FaArrowDown className="text-accent text-2xl group-hover:scale-110 transition-transform" />
-            </div>
-            <div className="w-px h-16 bg-gradient-to-b from-accent to-transparent"></div>
-          </button>
+            <Link
+              href="#projects"
+              className="btn btn-outline"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                minWidth: '11rem',
+              }}
+            >
+              <span>View My Work</span>
+              <span style={{
+                display: 'inline-block',
+                transition: 'transform 0.3s ease',
+              }}>→</span>
+            </Link>
+            <Link
+              href="#contact"
+              className="btn btn-primary"
+              style={{
+                minWidth: '11rem',
+                justifyContent: 'center',
+              }}
+            >
+              Get In Touch
+            </Link>
+          </div>
+
+
         </div>
       </div>
 
-      {/* Decorative grid with enhanced pattern */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(100,255,218,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(100,255,218,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+      {/* Scroll indicator — outside container so it anchors to section bottom */}
+      <button
+        onClick={scrollToProjects}
+        suppressHydrationWarning
+        style={{
+          position: 'absolute',
+          bottom: '2.5rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.5rem',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: '#b8b4a8',
+          transition: 'all 0.3s ease',
+          zIndex: 3,
+        }}
+        aria-label="Scroll to projects"
+        onMouseEnter={(e) => {
+          const span = e.currentTarget.querySelector('span');
+          if (span) (span as HTMLElement).style.opacity = '1';
+        }}
+        onMouseLeave={(e) => {
+          const span = e.currentTarget.querySelector('span');
+          if (span) (span as HTMLElement).style.opacity = '0';
+        }}
+      >
+        <span style={{
+          fontSize: '0.875rem',
+          fontFamily: 'IBM Plex Mono, monospace',
+          opacity: 0,
+          transition: 'opacity 0.3s ease',
+        }}>
+          Scroll Down
+        </span>
+        <div className="animate-bounce">
+          <FaArrowDown style={{ color: '#d4af37', fontSize: '1.5rem' }} />
+        </div>
+        <div style={{
+          width: '1px',
+          height: '4rem',
+          background: 'linear-gradient(to bottom, #d4af37, transparent)',
+        }}></div>
+      </button>
+
+      {/* Decorative grid */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+      }}>
+        <div className="bg-grid-pattern" style={{
+          position: 'absolute',
+          inset: 0,
+        }}></div>
       </div>
 
       {/* Corner accents */}
-      <div className="absolute top-0 left-0 w-20 h-20 border-l-2 border-t-2 border-accent/50"></div>
-      <div className="absolute top-0 right-0 w-20 h-20 border-r-2 border-t-2 border-accent/50"></div>
-      <div className="absolute bottom-0 left-0 w-20 h-20 border-l-2 border-b-2 border-accent/50"></div>
-      <div className="absolute bottom-0 right-0 w-20 h-20 border-r-2 border-b-2 border-accent/50"></div>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '5rem',
+        height: '5rem',
+        borderLeft: '2px solid rgba(212, 175, 55, 0.5)',
+        borderTop: '2px solid rgba(212, 175, 55, 0.5)',
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '5rem',
+        height: '5rem',
+        borderRight: '2px solid rgba(212, 175, 55, 0.5)',
+        borderTop: '2px solid rgba(212, 175, 55, 0.5)',
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '5rem',
+        height: '5rem',
+        borderLeft: '2px solid rgba(212, 175, 55, 0.5)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.5)',
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        width: '5rem',
+        height: '5rem',
+        borderRight: '2px solid rgba(212, 175, 55, 0.5)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.5)',
+      }}></div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (min-width: 1024px) {
+          .side-social-links,
+          .side-email-link {
+            display: flex !important;
+          }
+        }
+
+        .btn:hover span:last-child {
+          transform: translateX(4px);
+        }
+      `}} />
     </section>
   );
 };

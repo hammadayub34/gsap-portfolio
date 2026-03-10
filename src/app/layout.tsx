@@ -4,43 +4,48 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Your Name | Creative Developer & Designer',
-  description: 'Portfolio of a creative developer specializing in elegant, high-performance web experiences. Expertise in React, Next.js, and modern web technologies.',
+  metadataBase: new URL('https://hammadayub.dev'),
+  title: 'Hammad Ayub | Backend Engineer & CRM Specialist',
+  description: 'Portfolio of Hammad Ayub — a results-driven backend engineer and CRM automation specialist with 2+ years of experience building scalable web, IoT, and automation solutions using Node.js, Python, and modern frameworks.',
   keywords: [
+    'Hammad Ayub',
+    'backend engineer',
+    'CRM automation',
+    'Node.js developer',
+    'Python developer',
+    'HubSpot',
+    'GoHighLevel',
+    'Zoho',
+    'Fastify',
+    'FastAPI',
+    'IoT',
+    'automation',
     'portfolio',
-    'web developer',
-    'creative developer',
-    'full-stack',
-    'Next.js',
-    'React',
-    'TypeScript',
-    'UI/UX design',
-    'frontend development',
-    'web design'
+    'Islamabad'
   ],
-  authors: [{ name: 'Your Name' }],
-  creator: 'Your Name',
+  authors: [{ name: 'Hammad Ayub' }],
+  creator: 'Hammad Ayub',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://yourwebsite.com',
-    siteName: 'Your Name Portfolio',
-    title: 'Your Name | Creative Developer & Designer',
-    description: 'Portfolio showcasing elegant web experiences and creative development work',
+    url: 'https://hammadayub.dev',
+    siteName: 'Hammad Ayub Portfolio',
+    title: 'Hammad Ayub | Backend Engineer & CRM Specialist',
+    description: 'Backend engineer specializing in scalable web, IoT, and CRM automation solutions.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Your Name Portfolio',
+        alt: 'Hammad Ayub Portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Your Name | Creative Developer',
-    description: 'Portfolio of creative development work',
-    creator: '@yourusername',
+    title: 'Hammad Ayub | Backend Engineer',
+    description: 'Backend engineer specializing in Node.js, Python, and CRM automation.',
+    creator: '@hammadayub34',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -54,14 +59,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#0d0d0d' },
-  ],
 }
 
 export default function RootLayout({
@@ -70,51 +67,31 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <head>
-        {/* Preconnect to external domains */}
+        <script dangerouslySetInnerHTML={{ __html: 'if(history.scrollRestoration)history.scrollRestoration="manual";window.scrollTo(0,0);' }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="antialiased">
+      <body>
         {/* Skip to main content for accessibility */}
-        <a 
-          href="#main-content" 
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-gold focus:text-obsidian focus:font-bold"
-        >
+        {/* <a href="#main-content" className="skip-link">
           Skip to main content
-        </a>
+        </a> */}
 
         {/* Page wrapper */}
-        <div className="relative min-h-screen flex flex-col">
-          {/* Navigation */}
+        <div className="page-wrapper">
           <Header />
-
-          {/* Main content */}
-          <main 
-            id="main-content" 
-            className="relative z-10 flex-1"
-            role="main"
-          >
+          
+          <main id="main-content" className="relative z-10 flex-1" role="main">
             {children}
           </main>
-
-          {/* Footer */}
+          
           <Footer />
         </div>
 
-        {/* Cursor follower (optional enhancement) */}
-        <div 
-          id="cursor-follower" 
-          className="hidden lg:block fixed w-8 h-8 rounded-full border-2 border-gold pointer-events-none z-50 opacity-0 transition-opacity duration-300"
-          style={{ mixBlendMode: 'difference' }}
-        />
+        {/* Cursor follower */}
+        <div id="cursor-follower" className="cursor-follower" />
       </body>
     </html>
   )

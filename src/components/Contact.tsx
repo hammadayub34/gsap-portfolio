@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { gsap } from '@/lib/gsapConfig';
-import { ContactForm } from '@/types';
-import { 
-  FaEnvelope, 
-  FaPhone, 
-  FaMapMarkerAlt, 
-  FaGithub, 
-  FaLinkedin, 
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import {
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaGithub,
+  FaLinkedin,
   FaTwitter,
   FaPaperPlane,
   FaCheckCircle,
@@ -16,7 +16,7 @@ import {
   FaClock,
   FaCalendarAlt
 } from 'react-icons/fa';
-
+import { ContactForm } from '@/types';
 const Contact = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -38,51 +38,92 @@ const Contact = () => {
   const [submitMessage, setSubmitMessage] = useState('');
   const [charCount, setCharCount] = useState(0);
   const maxCharCount = 500;
-
+  
   // Form animations
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
-      });
-
-      tl.from(titleRef.current, {
+      // Title
+      gsap.from(titleRef.current, {
         opacity: 0,
         y: 50,
         duration: 1,
         ease: 'power3.out',
-      })
-      .from(formRef.current?.querySelectorAll('.form-group') || [], {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power2.out',
-      }, '-=0.5')
-      .from(infoRef.current?.querySelectorAll('.info-card') || [], {
-        opacity: 0,
-        x: 50,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power2.out',
-      }, '-=0.6')
-      .from(socialRef.current?.querySelectorAll('.social-link') || [], {
-        opacity: 0,
-        scale: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: 'back.out(1.7)',
-      }, '-=0.4')
-      .from(statsRef.current?.querySelectorAll('.stat-item') || [], {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power2.out',
-      }, '-=0.3');
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: titleRef.current,
+          start: 'top 85%',
+        },
+      });
+
+      // Form groups
+      const formGroups = formRef.current?.querySelectorAll('.form-group');
+      if (formGroups && formGroups.length > 0) {
+        gsap.from(formGroups, {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power2.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: 'top 85%',
+          },
+        });
+      }
+
+      // Info cards — own trigger so they always animate when visible
+      const infoCards = infoRef.current?.querySelectorAll('.info-card');
+      if (infoCards && infoCards.length > 0) {
+        gsap.from(infoCards, {
+          opacity: 0,
+          x: 50,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power2.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: infoRef.current,
+            start: 'top 85%',
+          },
+        });
+      }
+
+      // Social links — own trigger
+      const socialLinks = socialRef.current?.querySelectorAll('.social-link');
+      if (socialLinks && socialLinks.length > 0) {
+        gsap.from(socialLinks, {
+          opacity: 0,
+          scale: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: 'back.out(1.7)',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: socialRef.current,
+            start: 'top 90%',
+          },
+        });
+      }
+
+      // Stats — own trigger
+      const statItems = statsRef.current?.querySelectorAll('.stat-item');
+      if (statItems && statItems.length > 0) {
+        gsap.from(statItems, {
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: 'top 90%',
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -165,13 +206,16 @@ const Contact = () => {
     setErrors(newErrors);
     setTouched({ name: true, email: true, message: true });
 
-    if (formRef.current) {
-      const tl = gsap.timeline();
-      tl.to(formRef.current, { x: -10, duration: 0.05 })
-        .to(formRef.current, { x: 10, duration: 0.05 })
-        .to(formRef.current, { x: -10, duration: 0.05 })
-        .to(formRef.current, { x: 10, duration: 0.05 })
-        .to(formRef.current, { x: 0, duration: 0.05 });
+    if (Object.keys(newErrors).length > 0) {
+      if (formRef.current) {
+        const tl = gsap.timeline();
+        tl.to(formRef.current, { x: -10, duration: 0.05 })
+          .to(formRef.current, { x: 10, duration: 0.05 })
+          .to(formRef.current, { x: -10, duration: 0.05 })
+          .to(formRef.current, { x: 10, duration: 0.05 })
+          .to(formRef.current, { x: 0, duration: 0.05 });
+      }
+      return;
     }
 
     setIsSubmitting(true);
@@ -202,7 +246,7 @@ const Contact = () => {
         setSubmitStatus('idle');
         setSubmitMessage('');
       }, 7000);
-    } catch (error) {
+    } catch {
       // Error
       setSubmitStatus('error');
       setSubmitMessage('Oops! Something went wrong. Please try again or contact me directly via email.');
@@ -221,23 +265,23 @@ const Contact = () => {
     {
       icon: FaEnvelope,
       title: 'Email',
-      value: 'your.email@example.com',
-      link: 'mailto:your.email@example.com',
+      value: 'hammadayub34@gmail.com',
+      link: 'mailto:hammadayub34@gmail.com',
       description: 'Best way to reach me',
       color: 'from-accent/20 to-accent/10',
     },
     {
       icon: FaPhone,
       title: 'Phone',
-      value: '+1 (555) 123-4567',
-      link: 'tel:+15551234567',
-      description: 'Mon-Fri, 9AM-6PM PST',
+      value: '+92 304 9734062',
+      link: 'tel:+923049734062',
+      description: 'Available Mon-Fri',
       color: 'from-accent/15 to-accent/5',
     },
     {
       icon: FaMapMarkerAlt,
       title: 'Location',
-      value: 'San Francisco, CA',
+      value: 'Islamabad, Pakistan',
       link: null,
       description: 'Available for remote work',
       color: 'from-accent/10 to-transparent',
@@ -245,8 +289,8 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    { icon: FaGithub, url: 'https://github.com', label: 'GitHub', color: 'hover:text-white' },
-    { icon: FaLinkedin, url: 'https://linkedin.com', label: 'LinkedIn', color: 'hover:text-blue-400' },
+    { icon: FaGithub, url: 'https://github.com/hammadayub34', label: 'GitHub', color: 'hover:text-white' },
+    { icon: FaLinkedin, url: 'https://linkedin.com/in/hammadayub34', label: 'LinkedIn', color: 'hover:text-blue-400' },
     { icon: FaTwitter, url: 'https://twitter.com', label: 'Twitter', color: 'hover:text-sky-400' },
   ];
 
@@ -260,70 +304,187 @@ const Contact = () => {
     <section
       id="contact"
       ref={sectionRef}
-      className="py-20 px-6 min-h-screen flex items-center relative overflow-hidden"
+      style={{
+        padding: '5rem 1.5rem',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
       {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        opacity: 0.3,
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '25%',
+          right: '25%',
+          width: '24rem',
+          height: '24rem',
+          background: 'rgba(212, 175, 55, 0.05)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          bottom: '25%',
+          left: '25%',
+          width: '24rem',
+          height: '24rem',
+          background: 'rgba(212, 175, 55, 0.05)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+        }}></div>
       </div>
 
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-grid-pattern pointer-events-none opacity-20"></div>
+      <div className="bg-grid-pattern" style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        opacity: 0.2,
+      }}></div>
 
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container-custom" style={{ position: 'relative', zIndex: 10, maxWidth: '1200px' }}>
         {/* Section Title */}
-        <div ref={titleRef} className="mb-16">
-          <h2 className="text-textPrimary flex items-center mb-4">
-            <span className="font-mono text-accent text-2xl mr-4">04.</span>
-            <span className="font-display text-5xl font-bold">Get In Touch</span>
-            <span className="ml-8 h-px bg-textSecondary/30 flex-1 max-w-xs"></span>
+        <div ref={titleRef} style={{ marginBottom: '4rem' }}>
+          <h2 style={{
+            color: '#f5f1e8',
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '1rem',
+          }}>
+            <span style={{
+              fontFamily: 'IBM Plex Mono, monospace',
+              color: '#d4af37',
+              fontSize: '1.5rem',
+              marginRight: '1rem',
+            }}>
+              04.
+            </span>
+            <span style={{
+              fontFamily: 'Crimson Pro, serif',
+              fontSize: 'clamp(2.5rem, 5vw, 3rem)',
+              fontWeight: 700,
+            }}>
+              Get In Touch
+            </span>
+            <span style={{
+              marginLeft: '2rem',
+              height: '1px',
+              background: 'rgba(184, 180, 168, 0.3)',
+              flex: 1,
+              maxWidth: '20rem',
+            }}></span>
           </h2>
-          <p className="text-textSecondary text-lg max-w-2xl ml-16 font-body">
-            Have a project in mind or just want to chat? I'm always open to discussing new opportunities, creative ideas, or partnerships.
+          <p style={{
+            color: '#b8b4a8',
+            fontSize: '1.125rem',
+            maxWidth: '42rem',
+            marginLeft: '4rem',
+            fontFamily: 'Archivo, sans-serif',
+          }}>
+            Have a project in mind or just want to chat? I&apos;m always open to discussing new opportunities, creative ideas, or partnerships.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-12">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gap: '3rem',
+        }}
+          className="contact-grid"
+        >
           {/* Contact Form - Takes 3 columns */}
-          <div className="lg:col-span-3">
-            <div className="mb-8">
-              <h3 className="text-3xl font-display text-textPrimary mb-4 flex items-center gap-3">
-                <FaPaperPlane className="text-accent" />
+          <div className="form-column">
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{
+                fontSize: '1.875rem',
+                fontFamily: 'Crimson Pro, serif',
+                color: '#f5f1e8',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+              }}>
+                <FaPaperPlane style={{ color: '#d4af37' }} />
                 Send Me a Message
               </h3>
-              <p className="text-textSecondary leading-relaxed">
-                I'm always interested in hearing about new projects and opportunities. 
-                Whether you have a question or just want to say hi, I'll try my best to get back to you within 24 hours!
+              <p style={{
+                color: '#b8b4a8',
+                lineHeight: 1.8,
+              }}>
+                I&apos;m always interested in hearing about new projects and opportunities.
+                Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you within 24 hours!
               </p>
             </div>
 
-            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+            <form ref={formRef} onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {/* Name Input */}
               <div className="form-group">
                 <label
                   htmlFor="name"
-                  className="block text-textPrimary font-body font-semibold text-sm mb-2 uppercase tracking-wider"
+                  style={{
+                    display: 'block',
+                    color: '#f5f1e8',
+                    fontFamily: 'Archivo, sans-serif',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    marginBottom: '0.5rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                  }}
                 >
                   Your Name *
                 </label>
                 <input
+                  suppressHydrationWarning
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  onBlur={handleBlur}
                   required
-                  className={`w-full px-4 py-3 bg-secondary/50 border ${
-                    errors.name && touched.name
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-accent/20 focus:border-accent'
-                  } text-textPrimary focus:outline-none transition-all duration-300 backdrop-blur-sm`}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    background: 'rgba(26, 26, 26, 0.5)',
+                    border: errors.name && touched.name ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
+                    color: '#f5f1e8',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: 'blur(10px)',
+                    fontFamily: 'Archivo, sans-serif',
+                  }}
                   placeholder="John Doe"
+                  onFocus={(e) => {
+                    if (!errors.name || !touched.name) {
+                      e.currentTarget.style.borderColor = '#d4af37';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e);
+                    if (!errors.name || !touched.name) {
+                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+                    }
+                  }}
                 />
                 {errors.name && touched.name && (
-                  <p className="mt-2 text-red-400 text-sm flex items-center gap-2 font-mono">
+                  <p style={{
+                    marginTop: '0.5rem',
+                    color: '#f87171',
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                  }}>
                     <FaExclamationCircle size={14} />
                     {errors.name}
                   </p>
@@ -334,27 +495,61 @@ const Contact = () => {
               <div className="form-group">
                 <label
                   htmlFor="email"
-                  className="block text-textPrimary font-body font-semibold text-sm mb-2 uppercase tracking-wider"
+                  style={{
+                    display: 'block',
+                    color: '#f5f1e8',
+                    fontFamily: 'Archivo, sans-serif',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    marginBottom: '0.5rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                  }}
                 >
                   Your Email *
                 </label>
                 <input
+                  suppressHydrationWarning
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  onBlur={handleBlur}
                   required
-                  className={`w-full px-4 py-3 bg-secondary/50 border ${
-                    errors.email && touched.email
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-accent/20 focus:border-accent'
-                  } text-textPrimary focus:outline-none transition-all duration-300 backdrop-blur-sm`}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    background: 'rgba(26, 26, 26, 0.5)',
+                    border: errors.email && touched.email ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
+                    color: '#f5f1e8',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: 'blur(10px)',
+                    fontFamily: 'Archivo, sans-serif',
+                  }}
                   placeholder="john@example.com"
+                  onFocus={(e) => {
+                    if (!errors.email || !touched.email) {
+                      e.currentTarget.style.borderColor = '#d4af37';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e);
+                    if (!errors.email || !touched.email) {
+                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+                    }
+                  }}
                 />
                 {errors.email && touched.email && (
-                  <p className="mt-2 text-red-400 text-sm flex items-center gap-2 font-mono">
+                  <p style={{
+                    marginTop: '0.5rem',
+                    color: '#f87171',
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                  }}>
                     <FaExclamationCircle size={14} />
                     {errors.email}
                   </p>
@@ -363,36 +558,77 @@ const Contact = () => {
 
               {/* Message Textarea */}
               <div className="form-group">
-                <div className="flex items-center justify-between mb-2">
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '0.5rem',
+                }}>
                   <label
                     htmlFor="message"
-                    className="block text-textPrimary font-body font-semibold text-sm uppercase tracking-wider"
+                    style={{
+                      display: 'block',
+                      color: '#f5f1e8',
+                      fontFamily: 'Archivo, sans-serif',
+                      fontWeight: 600,
+                      fontSize: '0.875rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                    }}
                   >
                     Your Message *
                   </label>
-                  <span className={`text-xs font-mono ${
-                    charCount > maxCharCount ? 'text-red-400' : 'text-textMuted'
-                  }`}>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    color: charCount > maxCharCount ? '#f87171' : '#8a8780',
+                  }}>
                     {charCount}/{maxCharCount}
                   </span>
                 </div>
                 <textarea
+                  suppressHydrationWarning
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  onBlur={handleBlur}
                   required
                   rows={6}
-                  className={`w-full px-4 py-3 bg-secondary/50 border ${
-                    errors.message && touched.message
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-accent/20 focus:border-accent'
-                  } text-textPrimary focus:outline-none transition-all duration-300 resize-none backdrop-blur-sm`}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    background: 'rgba(26, 26, 26, 0.5)',
+                    border: errors.message && touched.message ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
+                    color: '#f5f1e8',
+                    outline: 'none',
+                    transition: 'all 0.3s ease',
+                    resize: 'none',
+                    backdropFilter: 'blur(10px)',
+                    fontFamily: 'Archivo, sans-serif',
+                  }}
                   placeholder="Hello! I'd like to discuss..."
+                  onFocus={(e) => {
+                    if (!errors.message || !touched.message) {
+                      e.currentTarget.style.borderColor = '#d4af37';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e);
+                    if (!errors.message || !touched.message) {
+                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+                    }
+                  }}
                 />
                 {errors.message && touched.message && (
-                  <p className="mt-2 text-red-400 text-sm flex items-center gap-2 font-mono">
+                  <p style={{
+                    marginTop: '0.5rem',
+                    color: '#f87171',
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                  }}>
                     <FaExclamationCircle size={14} />
                     {errors.message}
                   </p>
@@ -401,12 +637,26 @@ const Contact = () => {
 
               {/* Submit Button */}
               <button
+                suppressHydrationWarning
                 type="submit"
                 disabled={isSubmitting}
-                className="group relative w-full px-8 py-4 bg-accent text-primary hover:bg-accent-light transition-all duration-300 font-body font-bold shadow-gold hover:shadow-gold-lg disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden uppercase tracking-wider"
+                className="btn btn-primary"
+                style={{
+                  width: '100%',
+                  padding: '1rem 2rem',
+                  opacity: isSubmitting ? 0.5 : 1,
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  overflow: 'hidden',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                }}
               >
-                <span className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-                <span className="relative flex items-center justify-center gap-3">
+                <span style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.75rem',
+                }}>
                   {isSubmitting ? (
                     <>
                       <span className="animate-spin">⏳</span>
@@ -424,16 +674,24 @@ const Contact = () => {
               {/* Status Messages */}
               {submitMessage && (
                 <div
-                  className={`p-4 border backdrop-blur-sm font-body text-sm flex items-start gap-3 animate-fade-in ${
-                    submitStatus === 'success'
-                      ? 'bg-green-500/10 border-green-500/30 text-green-400'
-                      : 'bg-red-500/10 border-red-500/30 text-red-400'
-                  }`}
+                  className="animate-fade-in"
+                  style={{
+                    padding: '1rem',
+                    border: `1px solid ${submitStatus === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                    backdropFilter: 'blur(10px)',
+                    fontFamily: 'Archivo, sans-serif',
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.75rem',
+                    background: submitStatus === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    color: submitStatus === 'success' ? '#4ade80' : '#f87171',
+                  }}
                 >
                   {submitStatus === 'success' ? (
-                    <FaCheckCircle className="mt-0.5 flex-shrink-0" size={18} />
+                    <FaCheckCircle style={{ marginTop: '0.125rem', flexShrink: 0 }} size={18} />
                   ) : (
-                    <FaExclamationCircle className="mt-0.5 flex-shrink-0" size={18} />
+                    <FaExclamationCircle style={{ marginTop: '0.125rem', flexShrink: 0 }} size={18} />
                   )}
                   <span>{submitMessage}</span>
                 </div>
@@ -442,98 +700,268 @@ const Contact = () => {
           </div>
 
           {/* Contact Information Sidebar - Takes 2 columns */}
-          <div ref={infoRef} className="lg:col-span-2 space-y-6">
+          <div ref={infoRef} className="info-column" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {/* Contact Cards */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-display text-textPrimary mb-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontFamily: 'Crimson Pro, serif',
+                color: '#f5f1e8',
+                marginBottom: '1rem',
+              }}>
                 Contact Information
               </h3>
-              {contactInfo.map((info, index) => (
+              {contactInfo.map((info, index) => {
+                const IconComponent = info.icon;
+                return (
                 <div
                   key={index}
-                  className={`info-card p-5 bg-gradient-to-br ${info.color} border border-accent/10 hover:border-accent/30 transition-all duration-300 group cursor-pointer`}
+                  className="info-card"
+                  style={{
+                    padding: '1.25rem',
+                    background: index === 0 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1))' :
+                               index === 1 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05))' :
+                               'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), transparent)',
+                    border: '1px solid rgba(212, 175, 55, 0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.1)';
+                  }}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 flex-shrink-0 bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-300">
-                      <info.icon size={20} />
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '1rem',
+                  }}>
+                    <div style={{
+                      width: '3rem',
+                      height: '3rem',
+                      flexShrink: 0,
+                      background: 'rgba(212, 175, 55, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#d4af37',
+                      transition: 'all 0.3s ease',
+                    }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#d4af37';
+                        e.currentTarget.style.color = '#0d0d0d';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                        e.currentTarget.style.color = '#d4af37';
+                      }}
+                    >
+                      <IconComponent size={20} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-textPrimary font-body font-semibold text-sm mb-1 uppercase tracking-wider">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h4 style={{
+                        color: '#f5f1e8',
+                        fontFamily: 'Archivo, sans-serif',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                        marginBottom: '0.25rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                      }}>
                         {info.title}
                       </h4>
                       {info.link ? (
                         <a
                           href={info.link}
-                          className="text-textSecondary hover:text-accent transition-colors duration-300 block truncate"
+                          style={{
+                            color: '#b8b4a8',
+                            transition: 'color 0.3s ease',
+                            display: 'block',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textDecoration: 'none',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#d4af37';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = '#b8b4a8';
+                          }}
                         >
                           {info.value}
                         </a>
                       ) : (
-                        <p className="text-textSecondary truncate">{info.value}</p>
+                        <p style={{
+                          color: '#b8b4a8',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}>{info.value}</p>
                       )}
-                      <p className="text-textMuted text-xs mt-1 font-mono">
+                      <p style={{
+                        color: '#8a8780',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        fontFamily: 'IBM Plex Mono, monospace',
+                      }}>
                         {info.description}
                       </p>
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
 
             {/* Social Media Links */}
-            <div ref={socialRef} className="p-6 bg-secondary/30 border border-accent/10">
-              <h4 className="text-textPrimary font-display text-lg mb-4">
+            <div ref={socialRef} style={{
+              padding: '1.5rem',
+              background: 'rgba(26, 26, 26, 0.3)',
+              border: '1px solid rgba(212, 175, 55, 0.1)',
+            }}>
+              <h4 style={{
+                color: '#f5f1e8',
+                fontFamily: 'Crimson Pro, serif',
+                fontSize: '1.125rem',
+                marginBottom: '1rem',
+              }}>
                 Connect on Social
               </h4>
-              <div className="flex gap-4">
-                {socialLinks.map((social, index) => (
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                {socialLinks.map((social, index) => {
+                  const SocialIcon = social.icon;
+                  return (
                   <a
                     key={index}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className={`social-link w-12 h-12 bg-accent/10 flex items-center justify-center text-textSecondary hover:bg-accent hover:text-primary transition-all duration-300 group ${social.color}`}
+                    className="social-link"
+                    style={{
+                      width: '3rem',
+                      height: '3rem',
+                      background: 'rgba(212, 175, 55, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#b8b4a8',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#d4af37';
+                      e.currentTarget.style.color = '#0d0d0d';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                      e.currentTarget.style.color = '#b8b4a8';
+                    }}
                   >
-                    <social.icon size={20} className="group-hover:scale-110 transition-transform" />
+                    <SocialIcon size={20} />
                   </a>
-                ))}
+                );
+                })}
               </div>
             </div>
 
             {/* Response Stats */}
-            <div ref={statsRef} className="p-6 bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-              <h4 className="text-textPrimary font-display text-lg mb-4 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-accent animate-pulse"></div>
+            <div ref={statsRef} style={{
+              padding: '1.5rem',
+              background: 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05))',
+              border: '1px solid rgba(212, 175, 55, 0.2)',
+            }}>
+              <h4 style={{
+                color: '#f5f1e8',
+                fontFamily: 'Crimson Pro, serif',
+                fontSize: '1.125rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}>
+                <div className="animate-pulse-glow" style={{
+                  width: '0.5rem',
+                  height: '0.5rem',
+                  borderRadius: '50%',
+                  background: '#d4af37',
+                }}></div>
                 Currently Available
               </h4>
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                {responseStats.map((stat, index) => (
-                  <div key={index} className="stat-item text-center">
-                    <stat.icon className="mx-auto text-accent mb-2" size={20} />
-                    <div className="text-textPrimary font-display font-bold text-lg">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '1rem',
+                marginBottom: '1rem',
+              }}>
+                {responseStats.map((stat, index) => {
+                  const StatIcon = stat.icon;
+                  return (
+                  <div key={index} className="stat-item" style={{ textAlign: 'center' }}>
+                    <StatIcon style={{
+                      margin: '0 auto',
+                      color: '#d4af37',
+                      marginBottom: '0.5rem',
+                    }} size={20} />
+                    <div style={{
+                      color: '#f5f1e8',
+                      fontFamily: 'Crimson Pro, serif',
+                      fontWeight: 700,
+                      fontSize: '1.125rem',
+                    }}>
                       {stat.value}
                     </div>
-                    <div className="text-textMuted text-xs font-mono mt-1">
+                    <div style={{
+                      color: '#8a8780',
+                      fontSize: '0.75rem',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      marginTop: '0.25rem',
+                    }}>
                       {stat.label}
                     </div>
                   </div>
-                ))}
+                );
+                })}
               </div>
-              <p className="text-textSecondary text-sm leading-relaxed border-t border-accent/20 pt-4">
-                I'm currently available for freelance work and full-time opportunities. Let's build something amazing together!
+              <p style={{
+                color: '#b8b4a8',
+                fontSize: '0.875rem',
+                lineHeight: 1.8,
+                borderTop: '1px solid rgba(212, 175, 55, 0.2)',
+                paddingTop: '1rem',
+              }}>
+                I&apos;m currently available for freelance projects and full-time opportunities. Let&apos;s build something amazing together!
               </p>
             </div>
 
             {/* Quick Note */}
-            <div className="p-4 bg-accent/5 border-l-4 border-accent">
-              <p className="text-textSecondary text-sm font-mono italic">
+            <div style={{
+              padding: '1rem',
+              background: 'rgba(212, 175, 55, 0.05)',
+              borderLeft: '4px solid #d4af37',
+            }}>
+              <p style={{
+                color: '#b8b4a8',
+                fontSize: '0.875rem',
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontStyle: 'italic',
+              }}>
                 "The best way to predict the future is to create it." - Let's create yours together.
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (min-width: 1024px) {
+          .contact-grid {
+            grid-template-columns: 3fr 2fr;
+          }
+        }
+      `}} />
     </section>
   );
 };

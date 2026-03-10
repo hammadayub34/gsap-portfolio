@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { gsap, ScrollTrigger } from '@/lib/gsapConfig';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Skill } from '@/types';
 
 const Skills = () => {
@@ -13,14 +14,15 @@ const Skills = () => {
   const skillBarRefs = useRef<HTMLDivElement[]>([]);
 
   const skills: Skill[] = [
-    { name: 'JavaScript/TypeScript', level: 95, category: 'frontend' },
-    { name: 'React/Next.js', level: 90, category: 'frontend' },
-    { name: 'HTML/CSS/Tailwind', level: 95, category: 'frontend' },
-    { name: 'Node.js/Express', level: 85, category: 'backend' },
-    { name: 'Python/Django', level: 80, category: 'backend' },
-    { name: 'PostgreSQL/MongoDB', level: 85, category: 'backend' },
-    { name: 'Git/GitHub', level: 90, category: 'tools' },
-    { name: 'Docker/AWS', level: 75, category: 'tools' },
+    { name: 'JavaScript / Python', level: 95, category: 'frontend' },
+    { name: 'React / Next.js', level: 85, category: 'frontend' },
+    { name: 'HTML / CSS', level: 90, category: 'frontend' },
+    { name: 'Node.js / Fastify', level: 95, category: 'backend' },
+    { name: 'Python / FastAPI / Flask', level: 90, category: 'backend' },
+    { name: 'MongoDB / PostgreSQL', level: 88, category: 'backend' },
+    { name: 'Docker / AWS', level: 85, category: 'tools' },
+    { name: 'HubSpot / GoHighLevel / Zoho', level: 92, category: 'tools' },
+    { name: 'Zapier / Make / n8n', level: 90, category: 'tools' },
   ];
 
   const categories = {
@@ -30,13 +32,17 @@ const Skills = () => {
   };
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
-      // Animate section title
+      // Section title
       if (titleRef.current && sectionRef.current) {
         gsap.from(titleRef.current, {
           opacity: 0,
-          y: 50,
-          duration: 1,
+          y: 60,
+          duration: 1.2,
+          ease: 'power4.out',
+          immediateRender: false,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -44,33 +50,34 @@ const Skills = () => {
         });
       }
 
-      // Animate skill items
+      // Skill items with back easing for subtle bounce
       if (skillItemRefs.current.length > 0) {
         gsap.from(skillItemRefs.current, {
           opacity: 0,
-          y: 30,
-          duration: 0.8,
-          stagger: 0.1,
+          y: 40,
+          duration: 0.7,
+          stagger: 0.08,
+          ease: 'back.out(1.4)',
+          immediateRender: false,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: 'top 70%',
           },
         });
       }
 
-      // Animate skill bars
+      // Skill bars — single staggered animation, much smoother
       if (skillBarRefs.current.length > 0) {
-        skillBarRefs.current.forEach((bar, index) => {
-          gsap.from(bar, {
-            width: 0,
-            duration: 1.5,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: bar,
-              start: 'top 85%',
-            },
-            delay: index * 0.1,
-          });
+        gsap.from(skillBarRefs.current, {
+          width: 0,
+          duration: 1.2,
+          ease: 'expo.out',
+          stagger: 0.08,
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 65%',
+          },
         });
       }
     }, sectionRef);
@@ -91,21 +98,113 @@ const Skills = () => {
     <section
       id="skills"
       ref={sectionRef}
-      className="py-20 px-6 min-h-screen flex items-center"
+      style={{
+        padding: '5rem 1.5rem',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      <div className="container mx-auto max-w-6xl">
+      {/* Background decorative elements */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '20%',
+          left: '10%',
+          width: '26rem',
+          height: '26rem',
+          background: 'rgba(212, 175, 55, 0.06)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: '20%',
+          right: '8%',
+          width: '20rem',
+          height: '20rem',
+          background: 'rgba(212, 175, 55, 0.04)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+        }} />
+      </div>
+
+      {/* Grid pattern overlay */}
+      <div className="bg-grid-pattern" style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        opacity: 0.15,
+      }} />
+
+      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
         {/* Section Title */}
-        <h2 ref={titleRef} className="text-textPrimary mb-16 flex items-center">
-          <span className="font-mono text-accent text-2xl mr-4">02.</span>
+        <h2 
+          ref={titleRef} 
+          style={{
+            color: '#f5f1e8',
+            marginBottom: '4rem',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontFamily: 'Crimson Pro, serif',
+            fontWeight: 700,
+          }}
+        >
+          <span style={{
+            fontFamily: 'IBM Plex Mono, monospace',
+            color: '#d4af37',
+            fontSize: '1.5rem',
+            marginRight: '1rem',
+          }}>
+            02.
+          </span>
           Skills & Expertise
-          <span className="ml-8 h-px bg-textSecondary/30 flex-1 max-w-xs"></span>
+          <span style={{
+            marginLeft: '2rem',
+            height: '1px',
+            background: 'rgba(184, 180, 168, 0.3)',
+            flex: 1,
+            maxWidth: '20rem',
+          }}></span>
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gap: '3rem',
+        }}
+          className="skills-grid"
+        >
           {/* Frontend Skills */}
-          <div className="space-y-6">
-            <h3 className="text-2xl font-display text-textPrimary mb-6 flex items-center">
-              <span className="w-12 h-12 rounded bg-accent/10 flex items-center justify-center mr-4 text-accent">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontFamily: 'Crimson Pro, serif',
+              color: '#f5f1e8',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+              <span style={{
+                width: '3rem',
+                height: '3rem',
+                borderRadius: '0',
+                background: 'rgba(212, 175, 55, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '1rem',
+                color: '#d4af37',
+                fontSize: '1.5rem',
+              }}>
                 💻
               </span>
               Frontend Development
@@ -116,14 +215,40 @@ const Skills = () => {
                 className="skill-item"
                 ref={setSkillItemRef}
               >
-                <div className="flex justify-between mb-2">
-                  <span className="text-textPrimary font-mono text-sm">{skill.name}</span>
-                  <span className="text-accent font-mono text-sm">{skill.level}%</span>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginBottom: '0.5rem',
+                }}>
+                  <span style={{
+                    color: '#f5f1e8',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.875rem',
+                  }}>
+                    {skill.name}
+                  </span>
+                  <span style={{
+                    color: '#d4af37',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.875rem',
+                  }}>
+                    {skill.level}%
+                  </span>
                 </div>
-                <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                <div style={{
+                  height: '0.5rem',
+                  background: '#2a2a2a',
+                  borderRadius: '9999px',
+                  overflow: 'hidden',
+                }}>
                   <div
-                    className="skill-bar h-full bg-gradient-to-r from-accent to-accent/70 rounded-full"
-                    style={{ width: `${skill.level}%` }}
+                    className="skill-bar"
+                    style={{
+                      height: '100%',
+                      background: 'linear-gradient(to right, #d4af37, #e8c968)',
+                      borderRadius: '9999px',
+                      width: `${skill.level}%`,
+                    }}
                     ref={setSkillBarRef}
                   />
                 </div>
@@ -132,9 +257,27 @@ const Skills = () => {
           </div>
 
           {/* Backend Skills */}
-          <div className="space-y-6">
-            <h3 className="text-2xl font-display text-textPrimary mb-6 flex items-center">
-              <span className="w-12 h-12 rounded bg-accent/10 flex items-center justify-center mr-4 text-accent">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontFamily: 'Crimson Pro, serif',
+              color: '#f5f1e8',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+              <span style={{
+                width: '3rem',
+                height: '3rem',
+                borderRadius: '0',
+                background: 'rgba(212, 175, 55, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '1rem',
+                color: '#d4af37',
+                fontSize: '1.5rem',
+              }}>
                 ⚙️
               </span>
               Backend Development
@@ -145,14 +288,40 @@ const Skills = () => {
                 className="skill-item"
                 ref={setSkillItemRef}
               >
-                <div className="flex justify-between mb-2">
-                  <span className="text-textPrimary font-mono text-sm">{skill.name}</span>
-                  <span className="text-accent font-mono text-sm">{skill.level}%</span>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginBottom: '0.5rem',
+                }}>
+                  <span style={{
+                    color: '#f5f1e8',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.875rem',
+                  }}>
+                    {skill.name}
+                  </span>
+                  <span style={{
+                    color: '#d4af37',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.875rem',
+                  }}>
+                    {skill.level}%
+                  </span>
                 </div>
-                <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                <div style={{
+                  height: '0.5rem',
+                  background: '#2a2a2a',
+                  borderRadius: '9999px',
+                  overflow: 'hidden',
+                }}>
                   <div
-                    className="skill-bar h-full bg-gradient-to-r from-accent to-accent/70 rounded-full"
-                    style={{ width: `${skill.level}%` }}
+                    className="skill-bar"
+                    style={{
+                      height: '100%',
+                      background: 'linear-gradient(to right, #d4af37, #e8c968)',
+                      borderRadius: '9999px',
+                      width: `${skill.level}%`,
+                    }}
                     ref={setSkillBarRef}
                   />
                 </div>
@@ -161,28 +330,78 @@ const Skills = () => {
           </div>
 
           {/* Tools & Technologies */}
-          <div className="md:col-span-2 space-y-6">
-            <h3 className="text-2xl font-display text-textPrimary mb-6 flex items-center">
-              <span className="w-12 h-12 rounded bg-accent/10 flex items-center justify-center mr-4 text-accent">
+          <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontFamily: 'Crimson Pro, serif',
+              color: '#f5f1e8',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}>
+              <span style={{
+                width: '3rem',
+                height: '3rem',
+                borderRadius: '0',
+                background: 'rgba(212, 175, 55, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '1rem',
+                color: '#d4af37',
+                fontSize: '1.5rem',
+              }}>
                 🛠️
               </span>
               Tools & Technologies
             </h3>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gap: '1.5rem',
+            }}
+              className="tools-grid"
+            >
               {categories.tools.map((skill, index) => (
                 <div
                   key={index}
                   className="skill-item"
                   ref={setSkillItemRef}
                 >
-                  <div className="flex justify-between mb-2">
-                    <span className="text-textPrimary font-mono text-sm">{skill.name}</span>
-                    <span className="text-accent font-mono text-sm">{skill.level}%</span>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '0.5rem',
+                  }}>
+                    <span style={{
+                      color: '#f5f1e8',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      fontSize: '0.875rem',
+                    }}>
+                      {skill.name}
+                    </span>
+                    <span style={{
+                      color: '#d4af37',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      fontSize: '0.875rem',
+                    }}>
+                      {skill.level}%
+                    </span>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div style={{
+                    height: '0.5rem',
+                    background: '#2a2a2a',
+                    borderRadius: '9999px',
+                    overflow: 'hidden',
+                  }}>
                     <div
-                      className="skill-bar h-full bg-gradient-to-r from-accent to-accent/70 rounded-full"
-                      style={{ width: `${skill.level}%` }}
+                      className="skill-bar"
+                      style={{
+                        height: '100%',
+                        background: 'linear-gradient(to right, #d4af37, #e8c968)',
+                        borderRadius: '9999px',
+                        width: `${skill.level}%`,
+                      }}
                       ref={setSkillBarRef}
                     />
                   </div>
@@ -193,15 +412,36 @@ const Skills = () => {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-16 p-8 bg-secondary/30 rounded-lg border border-accent/20">
-          <p className="text-textSecondary text-center leading-relaxed">
-            I'm constantly learning and expanding my skill set. Currently exploring{' '}
-            <span className="text-accent font-semibold">Web3</span>,{' '}
-            <span className="text-accent font-semibold">Machine Learning</span>, and{' '}
-            <span className="text-accent font-semibold">Cloud Architecture</span>.
+        <div style={{
+          marginTop: '4rem',
+          padding: '2rem',
+          background: 'rgba(42, 42, 42, 0.3)',
+          borderRadius: '0.5rem',
+          border: '1px solid rgba(212, 175, 55, 0.2)',
+        }}>
+          <p style={{
+            color: '#b8b4a8',
+            textAlign: 'center',
+            lineHeight: 1.8,
+          }}>
+            I&apos;m constantly learning and expanding my skill set. Currently deepening expertise in{' '}
+            <span style={{ color: '#d4af37', fontWeight: 600 }}>Machine Learning</span>,{' '}
+            <span style={{ color: '#d4af37', fontWeight: 600 }}>Data Analytics</span>, and{' '}
+            <span style={{ color: '#d4af37', fontWeight: 600 }}>Cloud Architecture</span>.
           </p>
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (min-width: 768px) {
+          .skills-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+          .tools-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+      `}} />
     </section>
   );
 };

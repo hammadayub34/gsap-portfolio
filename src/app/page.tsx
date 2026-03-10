@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from '@/components/Hero'
 import About from '@/components/About'
 import Projects from '@/components/Projects'
@@ -8,8 +10,26 @@ import Skills from '@/components/Skills'
 import Contact from '@/components/Contact'
 
 export default function Home() {
+  // Global ScrollTrigger refresh — fixes stale positions after page refresh
   useEffect(() => {
-    // Custom cursor follower (optional enhancement)
+    gsap.registerPlugin(ScrollTrigger)
+
+    // Scroll to top instantly on refresh so animations start from correct position
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+
+    // After all components mount and layout is settled, refresh trigger positions
+    const rafId = requestAnimationFrame(() => {
+      ScrollTrigger.refresh()
+    })
+
+    return () => cancelAnimationFrame(rafId)
+  }, [])
+
+  // Custom cursor follower
+  useEffect(() => {
     const cursor = document.getElementById('cursor-follower')
     if (!cursor) return
 
@@ -35,42 +55,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero Section - Full viewport */}
-      <section id="home" className="relative">
-        <Hero />
-      </section>
-
-      {/* Decorative transition */}
-      <div className="relative h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-      {/* About Section */}
-      <section id="about" className="relative">
-        <About />
-      </section>
-
-      {/* Decorative transition */}
-      <div className="relative h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-      {/* Skills Section */}
-      <section id="skills" className="relative">
-        <Skills />
-      </section>
-
-      {/* Decorative transition */}
-      <div className="relative h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-      {/* Projects Section */}
-      <section id="projects" className="relative">
-        <Projects />
-      </section>
-
-      {/* Decorative transition */}
-      <div className="relative h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-      {/* Contact Section */}
-      <section id="contact" className="relative">
-        <Contact />
-      </section>
+      <Hero />
+      <About />
+      <Skills />
+      <Projects />
+      <Contact />
     </>
   )
 }

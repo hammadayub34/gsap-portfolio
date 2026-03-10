@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { gsap } from '@/lib/gsapConfig';
+import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Project } from '@/types';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
@@ -14,12 +16,16 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    
     if (cardRef.current) {
       gsap.from(cardRef.current, {
         opacity: 0,
-        y: 50,
-        duration: 0.8,
-        delay: index * 0.2,
+        y: 60,
+        duration: 1,
+        delay: index * 0.15,
+        ease: 'power4.out',
+        immediateRender: false,
         scrollTrigger: {
           trigger: cardRef.current,
           start: 'top 85%',
@@ -31,42 +37,123 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   return (
     <div
       ref={cardRef}
-      className="group relative bg-secondary/50 backdrop-blur-sm rounded-lg overflow-hidden border border-accent/10 hover:border-accent/30 transition-all duration-300 card-hover"
+      className="card-hover"
+      style={{
+        position: 'relative',
+        background: 'rgba(26, 26, 26, 0.5)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '0.5rem',
+        overflow: 'hidden',
+        border: '1px solid rgba(212, 175, 55, 0.1)',
+        transition: 'border-color 0.3s ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.35)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.1)';
+      }}
     >
       {/* Project Image */}
-      <div className="relative h-64 bg-gradient-to-br from-accent/20 to-accent/5 overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center text-accent text-6xl opacity-50">
-          🖼️
-        </div>
+      <div style={{
+        position: 'relative',
+        height: '16rem',
+        background: 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05))',
+        overflow: 'hidden',
+      }}>
+        <Image
+          src={project.image || '/placeholder.jpg'}
+          alt={project.title}
+          fill
+          style={{ objectFit: 'cover' }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
         {/* Overlay */}
-        <div className="absolute inset-0 bg-primary/60 group-hover:bg-primary/40 transition-all duration-300"></div>
+        <div 
+          className="project-overlay"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(13, 13, 13, 0.6)',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(13, 13, 13, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(13, 13, 13, 0.6)';
+          }}
+        ></div>
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4">
+      <div style={{
+        padding: '1.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+      }}>
         {/* Featured Badge */}
         {project.featured && (
-          <span className="inline-block px-3 py-1 bg-accent/10 text-accent text-xs font-mono rounded-full">
+          <span style={{
+            display: 'inline-block',
+            padding: '0.25rem 0.75rem',
+            background: 'rgba(212, 175, 55, 0.1)',
+            color: '#d4af37',
+            fontSize: '0.75rem',
+            fontFamily: 'IBM Plex Mono, monospace',
+            borderRadius: '9999px',
+            width: 'fit-content',
+          }}>
             Featured Project
           </span>
         )}
 
         {/* Title */}
-        <h3 className="text-2xl font-display text-textPrimary group-hover:text-accent transition-colors duration-300">
+        <h3 
+          className="project-title"
+          style={{
+            fontSize: '1.5rem',
+            fontFamily: 'Crimson Pro, serif',
+            color: '#f5f1e8',
+            transition: 'color 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#d4af37';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#f5f1e8';
+          }}
+        >
           {project.title}
         </h3>
 
         {/* Description */}
-        <p className="text-textSecondary leading-relaxed">
+        <p style={{
+          color: '#b8b4a8',
+          lineHeight: 1.8,
+        }}>
           {project.description}
         </p>
 
         {/* Technologies */}
-        <div className="flex flex-wrap gap-2">
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+        }}>
           {project.technologies.map((tech, i) => (
             <span
               key={i}
-              className="px-3 py-1 bg-accent/5 text-accent text-xs font-mono rounded border border-accent/20"
+              style={{
+                padding: '0.25rem 0.75rem',
+                background: 'rgba(212, 175, 55, 0.05)',
+                color: '#d4af37',
+                fontSize: '0.75rem',
+                fontFamily: 'IBM Plex Mono, monospace',
+                borderRadius: '0',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
+              }}
             >
               {tech}
             </span>
@@ -74,17 +161,39 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         </div>
 
         {/* Links */}
-        <div className="flex gap-4 pt-4">
+        <div style={{
+          display: 'flex',
+          gap: '1rem',
+          paddingTop: '1rem',
+        }}>
           {project.github && (
             <a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-textSecondary hover:text-accent transition-colors duration-300"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                color: '#b8b4a8',
+                transition: 'color 0.3s ease',
+                textDecoration: 'none',
+              }}
               aria-label="GitHub repository"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#d4af37';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#b8b4a8';
+              }}
             >
               <FaGithub size={20} />
-              <span className="font-mono text-sm">Code</span>
+              <span style={{
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: '0.875rem',
+              }}>
+                Code
+              </span>
             </a>
           )}
           {project.demo && (
@@ -92,18 +201,46 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
               href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-textSecondary hover:text-accent transition-colors duration-300"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                color: '#b8b4a8',
+                transition: 'color 0.3s ease',
+                textDecoration: 'none',
+              }}
               aria-label="Live demo"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#d4af37';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#b8b4a8';
+              }}
             >
               <FaExternalLinkAlt size={18} />
-              <span className="font-mono text-sm">Live Demo</span>
+              <span style={{
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: '0.875rem',
+              }}>
+                Live Demo
+              </span>
             </a>
           )}
         </div>
       </div>
 
       {/* Hover effect border */}
-      <div className="absolute inset-0 border-2 border-accent/0 group-hover:border-accent/20 rounded-lg transition-all duration-300 pointer-events-none"></div>
+      <div 
+        className="hover-border"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          border: '2px solid transparent',
+          borderRadius: '0.5rem',
+          transition: 'all 0.3s ease',
+          pointerEvents: 'none',
+        }}
+      ></div>
     </div>
   );
 };

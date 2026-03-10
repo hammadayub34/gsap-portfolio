@@ -1,18 +1,22 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { gsap, ScrollTrigger } from '@/lib/gsapConfig';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    
     if (footerRef.current) {
       gsap.from(footerRef.current, {
         opacity: 0,
         y: 50,
         duration: 1,
+        immediateRender: false,
         scrollTrigger: {
           trigger: footerRef.current,
           start: 'top 90%',
@@ -30,11 +34,27 @@ const Footer = () => {
   ];
 
   return (
-    <footer ref={footerRef} className="relative py-12 px-6 mt-20 border-t border-accent/20">
-      <div className="container mx-auto">
-        <div className="flex flex-col items-center space-y-6">
+    <footer 
+      ref={footerRef} 
+      style={{
+        position: 'relative',
+        padding: '3rem 1.5rem',
+        marginTop: '5rem',
+        borderTop: '1px solid rgba(212, 175, 55, 0.2)',
+      }}
+    >
+      <div className="container-custom">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.5rem',
+        }}>
           {/* Social Links */}
-          <div className="flex space-x-6">
+          <div style={{
+            display: 'flex',
+            gap: '1.5rem',
+          }}>
             {socialLinks.map((social, index) => (
               <a
                 key={index}
@@ -42,7 +62,18 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="text-textSecondary hover:text-accent transition-all duration-300 hover:transform hover:scale-110"
+                style={{
+                  color: '#b8b4a8',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#d4af37';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#b8b4a8';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
               >
                 <social.icon size={24} />
               </a>
@@ -50,18 +81,31 @@ const Footer = () => {
           </div>
 
           {/* Copyright */}
-          <div className="text-center">
-            <p className="text-textSecondary font-mono text-sm">
-              Designed & Built by <span className="text-accent">Your Name</span>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{
+              color: '#b8b4a8',
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.875rem',
+            }}>
+              Designed & Built by <span style={{ color: '#d4af37' }}>Your Name</span>
             </p>
-            <p className="text-textSecondary font-mono text-xs mt-2">
+            <p style={{
+              color: '#b8b4a8',
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.75rem',
+              marginTop: '0.5rem',
+            }}>
               © {new Date().getFullYear()} All rights reserved.
             </p>
           </div>
 
           {/* Tech Stack */}
-          <div className="text-center">
-            <p className="text-textSecondary font-mono text-xs">
+          <div style={{ textAlign: 'center' }}>
+            <p style={{
+              color: '#b8b4a8',
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.75rem',
+            }}>
               Built with Next.js, TypeScript, Tailwind CSS & GSAP
             </p>
           </div>
@@ -69,7 +113,15 @@ const Footer = () => {
       </div>
 
       {/* Decorative element */}
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-accent to-transparent"></div>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '8rem',
+        height: '4px',
+        background: 'linear-gradient(to right, transparent, #d4af37, transparent)',
+      }}></div>
     </footer>
   );
 };
