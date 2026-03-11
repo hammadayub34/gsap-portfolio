@@ -41,7 +41,7 @@ const Footer = () => {
       ref={footerRef}
       style={{
         position: 'relative',
-        padding: '2rem 1.5rem',
+        padding: '2rem 0',
         background: '#0d0d0d',
         borderTop: '1px solid rgba(212, 175, 55, 0.12)',
       }}

@@ -77,7 +77,7 @@ const Projects = () => {
     <section
       id="projects"
       ref={sectionRef}
-      style={{ padding: '5rem 1.5rem', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}
+      style={{ padding: '5rem 0', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}
     >
       {/* Background blobs */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>

@@ -164,7 +164,7 @@ const Hero = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '6rem 1.5rem 10rem',
+        padding: '6rem 0 10rem',
         overflow: 'hidden',
         background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%)',
       }}
@@ -238,7 +238,7 @@ const Hero = () => {
         ))}
       </div>
 
-      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
+      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', width: '100%' }}>
         <div style={{ textAlign: 'center' }}>
           {/* Greeting */}
           <div className="parallax-layer-1 animate-fade-in">

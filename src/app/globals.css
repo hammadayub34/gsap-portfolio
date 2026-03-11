@@ -506,6 +506,8 @@ p {
   position: relative;
   overflow: hidden;
   border-radius: 4px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary {
@@ -765,7 +767,10 @@ section {
    ============================================ */
 
 @media (max-width: 768px) {
-  :root { --section-padding: clamp(2rem, 5vw, 3rem); }
+  :root {
+    --section-padding: clamp(2rem, 5vw, 3rem);
+    --space-md: 1.25rem;
+  }
   .section-number { font-size: 4rem; }
   .animate-float { animation-duration: 4s; }
   .text-shadow-glow, .text-shadow-gold { text-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }

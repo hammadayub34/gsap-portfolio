@@ -113,7 +113,7 @@ const Skills = () => {
       id="skills"
       ref={sectionRef}
       style={{
-        padding: '5rem 1.5rem',
+        padding: '5rem 0',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -137,7 +137,7 @@ const Skills = () => {
 
       <div className="bg-grid-pattern" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.15 }} />
 
-      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
+      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', width: '100%' }}>
         {/* Section Title */}
         <h2
           ref={titleRef}

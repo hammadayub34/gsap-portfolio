@@ -305,7 +305,7 @@ const Contact = () => {
       id="contact"
       ref={sectionRef}
       style={{
-        padding: '5rem 1.5rem',
+        padding: '5rem 0',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
