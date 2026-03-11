@@ -110,7 +110,7 @@ const About = () => {
           right: '10%',
           width: '28rem',
           height: '28rem',
-          background: 'rgba(212, 175, 55, 0.06)',
+          background: 'rgba(212, 175, 55, 0.1)',
           borderRadius: '50%',
           filter: 'blur(80px)',
         }} />
@@ -120,7 +120,7 @@ const About = () => {
           left: '5%',
           width: '22rem',
           height: '22rem',
-          background: 'rgba(212, 175, 55, 0.04)',
+          background: 'rgba(212, 175, 55, 0.07)',
           borderRadius: '50%',
           filter: 'blur(80px)',
         }} />
@@ -143,9 +143,11 @@ const About = () => {
             marginBottom: '4rem',
             display: 'flex',
             alignItems: 'center',
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontSize: 'clamp(1.4rem, 5vw, 3rem)',
             fontFamily: 'Crimson Pro, serif',
             fontWeight: 700,
+            whiteSpace: 'nowrap',
+            flexWrap: 'nowrap',
           }}
         >
           <span style={{
@@ -153,8 +155,9 @@ const About = () => {
             color: '#d4af37',
             fontSize: '1.5rem',
             marginRight: '1rem',
+            flexShrink: 0,
           }}>
-            01.
+            02.
           </span>
           About Me
           <span style={{
@@ -166,9 +169,8 @@ const About = () => {
           }}></span>
         </h2>
 
-        <div style={{
+        <div className="about-grid" style={{
           display: 'grid',
-          gridTemplateColumns: '1fr',
           gap: '3rem',
           alignItems: 'center',
         }}>
@@ -178,6 +180,7 @@ const About = () => {
               color: '#b8b4a8',
               lineHeight: 1.8,
               fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+              textAlign: 'justify',
             }}>
               Hello! I&apos;m <span style={{ color: '#d4af37', fontWeight: 600 }}>Hammad Ayub</span>,
               a results-driven backend engineer and CRM automation specialist based in
@@ -189,8 +192,9 @@ const About = () => {
               color: '#b8b4a8',
               lineHeight: 1.8,
               fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+              textAlign: 'justify',
             }}>
-              Currently working as a <span style={{ color: '#d4af37', fontWeight: 600 }}>Design Engineer at CARE</span>{' '}
+              Currently working as a <span style={{ color: '#d4af37', fontWeight: 600 }}>Senior Design Engineer at CARE</span>{' '}
               (Center For Advanced Research In Engineering), building backend systems with
               Node.js, Fastify, Python, FastAPI, and MongoDB — deployed on AWS EC2 and Lambda
               for real-time IoT data pipelines.
@@ -200,6 +204,7 @@ const About = () => {
               color: '#b8b4a8',
               lineHeight: 1.8,
               fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+              textAlign: 'justify',
             }}>
               Alongside, I work as a freelance <span style={{ color: '#d4af37', fontWeight: 600 }}>CRM & Automation Consultant</span>,
               building workflows on HubSpot, GoHighLevel, and Zoho One — integrating
@@ -311,9 +316,12 @@ const About = () => {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        @media (min-width: 768px) {
-          #about > div > div:last-child {
-            grid-template-columns: 1fr 1fr;
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 900px) {
+          .about-grid {
+            grid-template-columns: 3fr 2fr;
           }
         }
       `}} />

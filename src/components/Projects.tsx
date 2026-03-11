@@ -1,44 +1,56 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Project } from '@/types';
+import { FaGithub } from 'react-icons/fa';
 import ProjectCard from './ProjectCard';
+import { Project } from '@/types';
 
 const Projects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const featuredRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
-    if (titleRef.current) {
+
+    const ctx = gsap.context(() => {
       gsap.from(titleRef.current, {
         opacity: 0,
         y: 50,
         duration: 1,
+        ease: 'power3.out',
         immediateRender: false,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
       });
-    }
+
+      gsap.from(featuredRef.current, {
+        opacity: 0,
+        y: 60,
+        duration: 1.1,
+        ease: 'power4.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: featuredRef.current, start: 'top 85%' },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
-  const projects: Project[] = [
-    {
-      id: 1,
-      title: 'FacadeAI',
-      description:
-        'IoT-based system for monitoring building lifespan with real-time data analytics. Designed and implemented the data schema for IoT tracking, built a RESTful backend with Node.js and Fastify, and integrated MongoDB for real-time monitoring and actionable insights.',
-      image: '/facadeai.jpg',
-      technologies: ['Node.js', 'Fastify', 'MongoDB', 'REST APIs', 'IoT', 'AWS'],
-      github: 'https://github.com/hammadayub34',
-      featured: true,
-    },
+  const featured: Project = {
+    id: 1,
+    title: 'FacadeAI',
+    description:
+      'IoT-based system for monitoring building lifespan with real-time data analytics. Designed and implemented the data schema for IoT tracking, built a RESTful backend with Node.js and Fastify, and integrated MongoDB for real-time monitoring and actionable insights.',
+    image: '/facadeai.jpg',
+    technologies: ['Node.js', 'Fastify', 'MongoDB', 'REST APIs', 'IoT', 'AWS'],
+    github: 'https://github.com/hammadayub34',
+    featured: true,
+  };
+
+  const rest: Project[] = [
     {
       id: 2,
       title: 'Dental X-Ray Analysis',
@@ -57,7 +69,7 @@ const Projects = () => {
       image: '/restaurant.jpg',
       technologies: ['Flutter', 'Dart', 'Firebase', 'REST APIs'],
       github: 'https://github.com/hammadayub34',
-      featured: true,
+      featured: false,
     },
   ];
 
@@ -65,123 +77,218 @@ const Projects = () => {
     <section
       id="projects"
       ref={sectionRef}
-      style={{
-        padding: '5rem 1.5rem',
-        minHeight: '100vh',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      style={{ padding: '5rem 1.5rem', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Background decorative elements */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        overflow: 'hidden',
-        pointerEvents: 'none',
-      }}>
+      {/* Background blobs */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{
-          position: 'absolute',
-          top: '10%',
-          right: '15%',
-          width: '30rem',
-          height: '30rem',
-          background: 'rgba(212, 175, 55, 0.05)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
+          position: 'absolute', top: '10%', right: '15%',
+          width: '30rem', height: '30rem',
+          background: 'rgba(212, 175, 55, 0.09)', borderRadius: '50%', filter: 'blur(80px)',
         }} />
         <div style={{
-          position: 'absolute',
-          bottom: '10%',
-          left: '10%',
-          width: '24rem',
-          height: '24rem',
-          background: 'rgba(212, 175, 55, 0.04)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
+          position: 'absolute', bottom: '10%', left: '10%',
+          width: '24rem', height: '24rem',
+          background: 'rgba(212, 175, 55, 0.07)', borderRadius: '50%', filter: 'blur(80px)',
         }} />
       </div>
 
-      {/* Grid pattern overlay */}
-      <div className="bg-grid-pattern" style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        opacity: 0.15,
-      }} />
+      <div className="bg-grid-pattern" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.15 }} />
 
       <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
         {/* Section Title */}
-        <h2 
-          ref={titleRef} 
+        <h2
+          ref={titleRef}
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
             display: 'flex',
             alignItems: 'center',
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontSize: 'clamp(1.4rem, 5vw, 3rem)',
             fontFamily: 'Crimson Pro, serif',
             fontWeight: 700,
+            whiteSpace: 'nowrap',
+            flexWrap: 'nowrap',
           }}
         >
-          <span style={{
-            fontFamily: 'IBM Plex Mono, monospace',
-            color: '#d4af37',
-            fontSize: '1.5rem',
-            marginRight: '1rem',
-          }}>
-            03.
+          <span style={{ fontFamily: 'IBM Plex Mono, monospace', color: '#d4af37', fontSize: '1.5rem', marginRight: '1rem', flexShrink: 0 }}>
+            04.
           </span>
           Featured Projects
-          <span style={{
-            marginLeft: '2rem',
-            height: '1px',
-            background: 'rgba(184, 180, 168, 0.3)',
-            flex: 1,
-            maxWidth: '20rem',
-          }}></span>
+          <span style={{ marginLeft: '2rem', height: '1px', background: 'rgba(184, 180, 168, 0.3)', flex: 1, maxWidth: '20rem' }} />
         </h2>
 
-        {/* Projects Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '2rem',
-        }}
-          className="projects-grid"
+        {/* Featured Hero Project */}
+        <div
+          ref={featuredRef}
+          className="featured-project"
+          style={{
+            display: 'grid',
+            background: 'rgba(26, 26, 26, 0.6)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(212, 175, 55, 0.15)',
+            borderTop: '2px solid #d4af37',
+            overflow: 'hidden',
+            marginBottom: '2rem',
+            transition: 'border-color 0.3s ease, box-shadow 0.4s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderTopColor = '#d4af37';
+            e.currentTarget.style.borderRightColor = 'rgba(212, 175, 55, 0.15)';
+            e.currentTarget.style.borderBottomColor = 'rgba(212, 175, 55, 0.15)';
+            e.currentTarget.style.borderLeftColor = 'rgba(212, 175, 55, 0.15)';
+          }}
         >
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+          {/* Image */}
+          <div className="featured-image" style={{
+            position: 'relative',
+            minHeight: '20rem',
+            background: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.04))',
+            overflow: 'hidden',
+          }}>
+            <Image
+              src={featured.image || '/placeholder.jpg'}
+              alt={featured.title}
+              fill
+              style={{ objectFit: 'cover' }}
+              sizes="(max-width: 900px) 100vw, 45vw"
+            />
+            {/* Overlay */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to right, rgba(13,13,13,0.1), rgba(13,13,13,0.55))',
+            }} />
+            {/* Featured badge */}
+            <div style={{
+              position: 'absolute', top: '1.25rem', left: '1.25rem',
+              padding: '0.3rem 0.9rem',
+              background: '#d4af37',
+              color: '#0d0d0d',
+              fontFamily: 'IBM Plex Mono, monospace',
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+            }}>
+              FEATURED PROJECT
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="featured-content" style={{
+            padding: '2.5rem',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '1.25rem',
+          }}>
+            <h3 style={{
+              fontFamily: 'Crimson Pro, serif',
+              fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+              fontWeight: 700,
+              color: '#f5f1e8',
+              lineHeight: 1.2,
+            }}>
+              {featured.title}
+            </h3>
+
+            <div style={{
+              padding: '1.25rem',
+              background: 'rgba(13, 13, 13, 0.4)',
+              border: '1px solid rgba(212, 175, 55, 0.08)',
+              backdropFilter: 'blur(8px)',
+            }}>
+              <p style={{
+                color: '#b8b4a8',
+                lineHeight: 1.8,
+                fontSize: '0.95rem',
+                textAlign: 'justify',
+              }}>
+                {featured.description}
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {featured.technologies.map((tech, i) => (
+                <span
+                  key={i}
+                  style={{
+                    padding: '0.25rem 0.75rem',
+                    background: 'rgba(212, 175, 55, 0.08)',
+                    color: '#d4af37',
+                    fontSize: '0.75rem',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    border: '1px solid rgba(212, 175, 55, 0.2)',
+                  }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            <a
+              href={featured.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.625rem',
+                color: '#b8b4a8',
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: '0.875rem',
+                textDecoration: 'none',
+                transition: 'color 0.3s ease',
+                width: 'fit-content',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#d4af37'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#b8b4a8'; }}
+            >
+              <FaGithub size={18} />
+              View on GitHub
+            </a>
+          </div>
+        </div>
+
+        {/* Remaining Projects Grid */}
+        <div className="projects-grid" style={{ display: 'grid', gap: '2rem', alignItems: 'stretch' }}>
+          {rest.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index + 1} />
           ))}
         </div>
 
         {/* View More */}
-        <div style={{
-          marginTop: '4rem',
-          textAlign: 'center',
-        }}>
-          <Link
-            href="/projects"
+        <div style={{ marginTop: '4rem', textAlign: 'center' }}>
+          <a
+            href="https://github.com/hammadayub34"
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn btn-outline"
-            style={{
-              display: 'inline-block',
-              padding: '1rem 2rem',
-            }}
+            style={{ display: 'inline-block', padding: '1rem 2rem' }}
           >
-            View All Projects
-          </Link>
+            View More on GitHub
+          </a>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        @media (min-width: 768px) {
+        .featured-project {
+          grid-template-columns: 1fr;
+        }
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 900px) {
+          .featured-project {
+            grid-template-columns: 45fr 55fr;
+          }
+          .featured-image {
+            min-height: 26rem;
+          }
           .projects-grid {
             grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        
-        @media (min-width: 1024px) {
-          .projects-grid {
-            grid-template-columns: repeat(3, 1fr);
           }
         }
       `}} />

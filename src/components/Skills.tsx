@@ -3,39 +3,56 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Skill } from '@/types';
 
 const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-
-  // Refs for skill items and bars
   const skillItemRefs = useRef<HTMLDivElement[]>([]);
   const skillBarRefs = useRef<HTMLDivElement[]>([]);
 
-  const skills: Skill[] = [
-    { name: 'JavaScript / Python', level: 95, category: 'frontend' },
-    { name: 'React / Next.js', level: 85, category: 'frontend' },
-    { name: 'HTML / CSS', level: 90, category: 'frontend' },
-    { name: 'Node.js / Fastify', level: 95, category: 'backend' },
-    { name: 'Python / FastAPI / Flask', level: 90, category: 'backend' },
-    { name: 'MongoDB / PostgreSQL', level: 88, category: 'backend' },
-    { name: 'Docker / AWS', level: 85, category: 'tools' },
-    { name: 'HubSpot / GoHighLevel / Zoho', level: 92, category: 'tools' },
-    { name: 'Zapier / Make / n8n', level: 90, category: 'tools' },
+  const skillGroups = [
+    {
+      label: '01',
+      title: 'Languages & Frameworks',
+      description: 'Core languages and full-stack frameworks',
+      accent: 'rgba(212, 175, 55, 0.12)',
+      skills: [
+        { name: 'JavaScript / TypeScript', level: 92 },
+        { name: 'Python', level: 90 },
+        { name: 'React / Next.js', level: 85 },
+        { name: 'HTML / CSS', level: 88 },
+      ],
+    },
+    {
+      label: '02',
+      title: 'Backend & Cloud',
+      description: 'Server-side, databases and cloud infrastructure',
+      accent: 'rgba(212, 175, 55, 0.09)',
+      skills: [
+        { name: 'Node.js / Fastify', level: 95 },
+        { name: 'Python / FastAPI / Flask', level: 90 },
+        { name: 'MongoDB / PostgreSQL', level: 88 },
+        { name: 'Docker / AWS EC2 & Lambda', level: 85 },
+      ],
+    },
+    {
+      label: '03',
+      title: 'CRM & Automation',
+      description: 'Business automation, CRM platforms and workflow tools',
+      accent: 'rgba(212, 175, 55, 0.07)',
+      skills: [
+        { name: 'HubSpot / GoHighLevel / Zoho', level: 92 },
+        { name: 'Zapier / Make / n8n', level: 90 },
+        { name: 'REST APIs / Microservices', level: 93 },
+        { name: 'IoT Integration', level: 82 },
+      ],
+    },
   ];
-
-  const categories = {
-    frontend: skills.filter((s) => s.category === 'frontend'),
-    backend: skills.filter((s) => s.category === 'backend'),
-    tools: skills.filter((s) => s.category === 'tools'),
-  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Section title
       if (titleRef.current && sectionRef.current) {
         gsap.from(titleRef.current, {
           opacity: 0,
@@ -50,7 +67,6 @@ const Skills = () => {
         });
       }
 
-      // Skill items with back easing for subtle bounce
       if (skillItemRefs.current.length > 0) {
         gsap.from(skillItemRefs.current, {
           opacity: 0,
@@ -66,7 +82,6 @@ const Skills = () => {
         });
       }
 
-      // Skill bars — single staggered animation, much smoother
       if (skillBarRefs.current.length > 0) {
         gsap.from(skillBarRefs.current, {
           width: 0,
@@ -85,7 +100,6 @@ const Skills = () => {
     return () => ctx.revert();
   }, []);
 
-  // Helper to assign refs during map
   const setSkillItemRef = (el: HTMLDivElement | null) => {
     if (el && !skillItemRefs.current.includes(el)) skillItemRefs.current.push(el);
   };
@@ -108,337 +122,203 @@ const Skills = () => {
       }}
     >
       {/* Background decorative elements */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        overflow: 'hidden',
-        pointerEvents: 'none',
-      }}>
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{
-          position: 'absolute',
-          top: '20%',
-          left: '10%',
-          width: '26rem',
-          height: '26rem',
-          background: 'rgba(212, 175, 55, 0.06)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
+          position: 'absolute', top: '20%', left: '10%',
+          width: '26rem', height: '26rem',
+          background: 'rgba(212, 175, 55, 0.1)', borderRadius: '50%', filter: 'blur(80px)',
         }} />
         <div style={{
-          position: 'absolute',
-          bottom: '20%',
-          right: '8%',
-          width: '20rem',
-          height: '20rem',
-          background: 'rgba(212, 175, 55, 0.04)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
+          position: 'absolute', bottom: '20%', right: '8%',
+          width: '20rem', height: '20rem',
+          background: 'rgba(212, 175, 55, 0.07)', borderRadius: '50%', filter: 'blur(80px)',
         }} />
       </div>
 
-      {/* Grid pattern overlay */}
-      <div className="bg-grid-pattern" style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        opacity: 0.15,
-      }} />
+      <div className="bg-grid-pattern" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.15 }} />
 
       <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
         {/* Section Title */}
-        <h2 
-          ref={titleRef} 
+        <h2
+          ref={titleRef}
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
             display: 'flex',
             alignItems: 'center',
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontSize: 'clamp(1.4rem, 5vw, 3rem)',
             fontFamily: 'Crimson Pro, serif',
             fontWeight: 700,
+            whiteSpace: 'nowrap',
+            flexWrap: 'nowrap',
           }}
         >
+          <span style={{ fontFamily: 'IBM Plex Mono, monospace', color: '#d4af37', fontSize: '1.5rem', marginRight: '1rem', flexShrink: 0 }}>
+            03.
+          </span>
+          Skills & Expertise
+          <span style={{ marginLeft: '2rem', height: '1px', background: 'rgba(184, 180, 168, 0.3)', flex: 1, maxWidth: '20rem' }} />
+        </h2>
+
+        {/* Skill group cards */}
+        <div className="skills-grid" style={{ display: 'grid', gap: '2rem' }}>
+          {skillGroups.map((group, groupIndex) => (
+            <div
+              key={groupIndex}
+              style={{
+                padding: '2rem',
+                background: 'rgba(26, 26, 26, 0.6)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(212, 175, 55, 0.12)',
+                borderTop: '2px solid #d4af37',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Card ambient glow */}
+              <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                background: `radial-gradient(ellipse at top left, ${group.accent} 0%, transparent 60%)`,
+              }} />
+
+              {/* Group header */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', position: 'relative' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
+                    <span style={{
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      color: '#d4af37',
+                      fontSize: '0.8rem',
+                      letterSpacing: '0.1em',
+                    }}>
+                      {group.label}
+                    </span>
+                    <div style={{ width: '2rem', height: '1px', background: 'rgba(212, 175, 55, 0.4)' }} />
+                  </div>
+                  <h3 style={{
+                    fontSize: 'clamp(1.2rem, 2vw, 1.5rem)',
+                    fontFamily: 'Crimson Pro, serif',
+                    color: '#f5f1e8',
+                    fontWeight: 700,
+                  }}>
+                    {group.title}
+                  </h3>
+                  <p style={{
+                    color: '#8a8780',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.75rem',
+                    marginTop: '0.25rem',
+                  }}>
+                    {group.description}
+                  </p>
+                </div>
+                <span style={{
+                  fontFamily: 'Crimson Pro, serif',
+                  fontSize: '4rem',
+                  fontWeight: 900,
+                  color: 'rgba(212, 175, 55, 0.06)',
+                  lineHeight: 1,
+                  userSelect: 'none',
+                }}>
+                  {group.label}
+                </span>
+              </div>
+
+              {/* Skills */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative' }}>
+                {group.skills.map((skill, index) => (
+                  <div key={index} className="skill-item" ref={setSkillItemRef}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                      <span style={{
+                        color: '#e0dcd2',
+                        fontFamily: 'IBM Plex Mono, monospace',
+                        fontSize: '0.825rem',
+                        letterSpacing: '0.02em',
+                      }}>
+                        {skill.name}
+                      </span>
+                      <span style={{
+                        color: '#d4af37',
+                        fontFamily: 'IBM Plex Mono, monospace',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                      }}>
+                        {skill.level}%
+                      </span>
+                    </div>
+                    <div style={{
+                      height: '6px',
+                      background: '#1e1e1e',
+                      borderRadius: '9999px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255,255,255,0.04)',
+                    }}>
+                      <div
+                        className="skill-bar"
+                        ref={setSkillBarRef}
+                        style={{
+                          height: '100%',
+                          width: `${skill.level}%`,
+                          background: 'linear-gradient(to right, #b8941f, #d4af37, #e8c968)',
+                          borderRadius: '9999px',
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Currently Learning banner */}
+        <div style={{
+          marginTop: '3rem',
+          padding: '1.5rem 2rem',
+          background: 'linear-gradient(to right, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.03))',
+          border: '1px solid rgba(212, 175, 55, 0.2)',
+          borderLeft: '3px solid #d4af37',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.5rem',
+          flexWrap: 'wrap',
+        }}>
           <span style={{
             fontFamily: 'IBM Plex Mono, monospace',
             color: '#d4af37',
-            fontSize: '1.5rem',
-            marginRight: '1rem',
+            fontSize: '0.75rem',
+            letterSpacing: '0.1em',
+            whiteSpace: 'nowrap',
           }}>
-            02.
+            CURRENTLY LEARNING
           </span>
-          Skills & Expertise
-          <span style={{
-            marginLeft: '2rem',
-            height: '1px',
-            background: 'rgba(184, 180, 168, 0.3)',
-            flex: 1,
-            maxWidth: '20rem',
-          }}></span>
-        </h2>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '3rem',
-        }}
-          className="skills-grid"
-        >
-          {/* Frontend Skills */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <h3 style={{
-              fontSize: '1.5rem',
-              fontFamily: 'Crimson Pro, serif',
-              color: '#f5f1e8',
-              marginBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-              <span style={{
-                width: '3rem',
-                height: '3rem',
-                borderRadius: '0',
-                background: 'rgba(212, 175, 55, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '1rem',
-                color: '#d4af37',
-                fontSize: '1.5rem',
-              }}>
-                💻
-              </span>
-              Frontend Development
-            </h3>
-            {categories.frontend.map((skill, index) => (
-              <div
-                key={index}
-                className="skill-item"
-                ref={setSkillItemRef}
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            {['Machine Learning', 'Data Analytics', 'Cloud Architecture', 'LLM Integration'].map((tag) => (
+              <span
+                key={tag}
+                style={{
+                  padding: '0.25rem 0.875rem',
+                  background: 'rgba(212, 175, 55, 0.08)',
+                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  color: '#b8b4a8',
+                  fontFamily: 'IBM Plex Mono, monospace',
+                  fontSize: '0.75rem',
+                }}
               >
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '0.5rem',
-                }}>
-                  <span style={{
-                    color: '#f5f1e8',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                    fontSize: '0.875rem',
-                  }}>
-                    {skill.name}
-                  </span>
-                  <span style={{
-                    color: '#d4af37',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                    fontSize: '0.875rem',
-                  }}>
-                    {skill.level}%
-                  </span>
-                </div>
-                <div style={{
-                  height: '0.5rem',
-                  background: '#2a2a2a',
-                  borderRadius: '9999px',
-                  overflow: 'hidden',
-                }}>
-                  <div
-                    className="skill-bar"
-                    style={{
-                      height: '100%',
-                      background: 'linear-gradient(to right, #d4af37, #e8c968)',
-                      borderRadius: '9999px',
-                      width: `${skill.level}%`,
-                    }}
-                    ref={setSkillBarRef}
-                  />
-                </div>
-              </div>
+                {tag}
+              </span>
             ))}
           </div>
-
-          {/* Backend Skills */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <h3 style={{
-              fontSize: '1.5rem',
-              fontFamily: 'Crimson Pro, serif',
-              color: '#f5f1e8',
-              marginBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-              <span style={{
-                width: '3rem',
-                height: '3rem',
-                borderRadius: '0',
-                background: 'rgba(212, 175, 55, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '1rem',
-                color: '#d4af37',
-                fontSize: '1.5rem',
-              }}>
-                ⚙️
-              </span>
-              Backend Development
-            </h3>
-            {categories.backend.map((skill, index) => (
-              <div
-                key={index}
-                className="skill-item"
-                ref={setSkillItemRef}
-              >
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '0.5rem',
-                }}>
-                  <span style={{
-                    color: '#f5f1e8',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                    fontSize: '0.875rem',
-                  }}>
-                    {skill.name}
-                  </span>
-                  <span style={{
-                    color: '#d4af37',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                    fontSize: '0.875rem',
-                  }}>
-                    {skill.level}%
-                  </span>
-                </div>
-                <div style={{
-                  height: '0.5rem',
-                  background: '#2a2a2a',
-                  borderRadius: '9999px',
-                  overflow: 'hidden',
-                }}>
-                  <div
-                    className="skill-bar"
-                    style={{
-                      height: '100%',
-                      background: 'linear-gradient(to right, #d4af37, #e8c968)',
-                      borderRadius: '9999px',
-                      width: `${skill.level}%`,
-                    }}
-                    ref={setSkillBarRef}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Tools & Technologies */}
-          <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <h3 style={{
-              fontSize: '1.5rem',
-              fontFamily: 'Crimson Pro, serif',
-              color: '#f5f1e8',
-              marginBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-              <span style={{
-                width: '3rem',
-                height: '3rem',
-                borderRadius: '0',
-                background: 'rgba(212, 175, 55, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '1rem',
-                color: '#d4af37',
-                fontSize: '1.5rem',
-              }}>
-                🛠️
-              </span>
-              Tools & Technologies
-            </h3>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '1.5rem',
-            }}
-              className="tools-grid"
-            >
-              {categories.tools.map((skill, index) => (
-                <div
-                  key={index}
-                  className="skill-item"
-                  ref={setSkillItemRef}
-                >
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '0.5rem',
-                  }}>
-                    <span style={{
-                      color: '#f5f1e8',
-                      fontFamily: 'IBM Plex Mono, monospace',
-                      fontSize: '0.875rem',
-                    }}>
-                      {skill.name}
-                    </span>
-                    <span style={{
-                      color: '#d4af37',
-                      fontFamily: 'IBM Plex Mono, monospace',
-                      fontSize: '0.875rem',
-                    }}>
-                      {skill.level}%
-                    </span>
-                  </div>
-                  <div style={{
-                    height: '0.5rem',
-                    background: '#2a2a2a',
-                    borderRadius: '9999px',
-                    overflow: 'hidden',
-                  }}>
-                    <div
-                      className="skill-bar"
-                      style={{
-                        height: '100%',
-                        background: 'linear-gradient(to right, #d4af37, #e8c968)',
-                        borderRadius: '9999px',
-                        width: `${skill.level}%`,
-                      }}
-                      ref={setSkillBarRef}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Info */}
-        <div style={{
-          marginTop: '4rem',
-          padding: '2rem',
-          background: 'rgba(42, 42, 42, 0.3)',
-          borderRadius: '0.5rem',
-          border: '1px solid rgba(212, 175, 55, 0.2)',
-        }}>
-          <p style={{
-            color: '#b8b4a8',
-            textAlign: 'center',
-            lineHeight: 1.8,
-          }}>
-            I&apos;m constantly learning and expanding my skill set. Currently deepening expertise in{' '}
-            <span style={{ color: '#d4af37', fontWeight: 600 }}>Machine Learning</span>,{' '}
-            <span style={{ color: '#d4af37', fontWeight: 600 }}>Data Analytics</span>, and{' '}
-            <span style={{ color: '#d4af37', fontWeight: 600 }}>Cloud Architecture</span>.
-          </p>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        @media (min-width: 768px) {
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 900px) {
           .skills-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-          .tools-grid {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
           }
         }
       `}} />

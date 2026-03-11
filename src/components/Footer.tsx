@@ -3,58 +3,57 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaHeart } from 'react-icons/fa';
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
-    if (footerRef.current) {
-      gsap.from(footerRef.current, {
+
+    const ctx = gsap.context(() => {
+      gsap.from(contentRef.current, {
         opacity: 0,
-        y: 50,
+        y: 40,
         duration: 1,
+        ease: 'power3.out',
         immediateRender: false,
         scrollTrigger: {
           trigger: footerRef.current,
           start: 'top 90%',
-          toggleActions: 'play none none reverse',
         },
       });
-    }
+    }, footerRef);
+
+    return () => ctx.revert();
   }, []);
 
   const socialLinks = [
-    { icon: FaGithub, href: 'https://github.com/yourusername', label: 'GitHub' },
-    { icon: FaLinkedin, href: 'https://linkedin.com/in/yourusername', label: 'LinkedIn' },
-    { icon: FaTwitter, href: 'https://twitter.com/yourusername', label: 'Twitter' },
-    { icon: FaEnvelope, href: 'mailto:your.email@example.com', label: 'Email' },
+    { icon: FaGithub, href: 'https://github.com/hammadayub34', label: 'GitHub' },
+    { icon: FaLinkedin, href: 'https://linkedin.com/in/hammadayub34', label: 'LinkedIn' },
+    { icon: FaTwitter, href: 'https://twitter.com/hammadayub34', label: 'Twitter' },
+    { icon: FaEnvelope, href: 'mailto:hammadayub34@gmail.com', label: 'Email' },
   ];
 
   return (
-    <footer 
-      ref={footerRef} 
+    <footer
+      ref={footerRef}
       style={{
         position: 'relative',
-        padding: '3rem 1.5rem',
-        marginTop: '5rem',
-        borderTop: '1px solid rgba(212, 175, 55, 0.2)',
+        padding: '2rem 1.5rem',
+        background: '#0d0d0d',
+        borderTop: '1px solid rgba(212, 175, 55, 0.12)',
       }}
     >
-      <div className="container-custom">
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1.5rem',
-        }}>
+      {/* Grid pattern — matches other sections */}
+      <div className="bg-grid-pattern" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.15 }} />
+
+      <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
+        <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
+
           {/* Social Links */}
-          <div style={{
-            display: 'flex',
-            gap: '1.5rem',
-          }}>
+          <div style={{ display: 'flex', gap: '1.25rem' }}>
             {socialLinks.map((social, index) => (
               <a
                 key={index}
@@ -63,65 +62,59 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 aria-label={social.label}
                 style={{
+                  width: '2.75rem',
+                  height: '2.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(212, 175, 55, 0.08)',
+                  border: '1px solid rgba(212, 175, 55, 0.15)',
                   color: '#b8b4a8',
                   transition: 'all 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#d4af37';
-                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.background = '#d4af37';
+                  e.currentTarget.style.color = '#0d0d0d';
+                  e.currentTarget.style.borderColor = '#d4af37';
+                  e.currentTarget.style.transform = 'translateY(-3px)';
                 }}
                 onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.08)';
                   e.currentTarget.style.color = '#b8b4a8';
-                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.15)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                <social.icon size={24} />
+                <social.icon size={18} />
               </a>
             ))}
           </div>
 
           {/* Copyright */}
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <p style={{
               color: '#b8b4a8',
               fontFamily: 'IBM Plex Mono, monospace',
-              fontSize: '0.875rem',
+              fontSize: '0.8rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem',
             }}>
-              Designed & Built by <span style={{ color: '#d4af37' }}>Your Name</span>
+              Designed & Built with <FaHeart style={{ color: '#d4af37', fontSize: '0.75rem' }} /> by{' '}
+              <span style={{ color: '#d4af37' }}>Hammad Ayub</span>
             </p>
             <p style={{
-              color: '#b8b4a8',
+              color: '#6a6760',
               fontFamily: 'IBM Plex Mono, monospace',
               fontSize: '0.75rem',
-              marginTop: '0.5rem',
             }}>
-              © {new Date().getFullYear()} All rights reserved.
+              © {new Date().getFullYear()} All rights reserved &nbsp;·&nbsp; Built with Next.js, TypeScript & GSAP
             </p>
           </div>
 
-          {/* Tech Stack */}
-          <div style={{ textAlign: 'center' }}>
-            <p style={{
-              color: '#b8b4a8',
-              fontFamily: 'IBM Plex Mono, monospace',
-              fontSize: '0.75rem',
-            }}>
-              Built with Next.js, TypeScript, Tailwind CSS & GSAP
-            </p>
-          </div>
         </div>
       </div>
-
-      {/* Decorative element */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '8rem',
-        height: '4px',
-        background: 'linear-gradient(to right, transparent, #d4af37, transparent)',
-      }}></div>
     </footer>
   );
 };

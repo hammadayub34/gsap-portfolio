@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
-import { FaArrowDown, FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
+import { FaArrowDown } from 'react-icons/fa';
 import AnimatedText from './AnimatedText';
 
 const Hero = () => {
@@ -11,7 +11,6 @@ const Hero = () => {
   const subtitleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const socialRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
   
   const [typedText, setTypedText] = useState('');
@@ -126,22 +125,6 @@ const Hero = () => {
     return () => ctx.revert();
   }, [particlePositions]);
 
-  // Hide social icons when hero scrolls out of view
-  useEffect(() => {
-    const heroEl = heroRef.current;
-    const socialEl = socialRef.current;
-    if (!heroEl || !socialEl) return;
-
-    socialEl.style.transition = 'opacity 0.3s ease';
-
-    const handleScroll = () => {
-      const heroBottom = heroEl.getBoundingClientRect().bottom;
-      socialEl.style.opacity = heroBottom <= 0 ? '0' : '1';
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Mouse parallax effect
   useEffect(() => {
@@ -255,138 +238,6 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Side social links */}
-      <div
-        ref={socialRef}
-        className="side-social-links"
-        style={{
-          position: 'fixed',
-          left: '2rem',
-          bottom: 0,
-          display: 'none',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1.5rem',
-          zIndex: 10,
-        }}
-      >
-        <a
-          href="https://github.com/hammadayub34"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: '#b8b4a8',
-            transition: 'all 0.3s ease',
-          }}
-          aria-label="GitHub"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#d4af37';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#b8b4a8';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <FaGithub size={24} />
-        </a>
-        <a
-          href="https://linkedin.com/in/hammadayub34"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: '#b8b4a8',
-            transition: 'all 0.3s ease',
-          }}
-          aria-label="LinkedIn"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#d4af37';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#b8b4a8';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <FaLinkedin size={24} />
-        </a>
-        <a
-          href="https://twitter.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: '#b8b4a8',
-            transition: 'all 0.3s ease',
-          }}
-          aria-label="Twitter"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#d4af37';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#b8b4a8';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <FaTwitter size={24} />
-        </a>
-        <a
-          href="mailto:hammadayub34@gmail.com"
-          style={{
-            color: '#b8b4a8',
-            transition: 'all 0.3s ease',
-          }}
-          aria-label="Email"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#d4af37';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#b8b4a8';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <FaEnvelope size={24} />
-        </a>
-        <div style={{ width: '1px', height: '6rem', background: 'rgba(184, 180, 168, 0.5)' }}></div>
-      </div>
-
-      {/* Side email */}
-      <div 
-        className="side-email-link"
-        style={{
-          position: 'fixed',
-          right: '2rem',
-          bottom: 0,
-          display: 'none',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1.5rem',
-          zIndex: 10,
-        }}
-      >
-        <a
-          href="mailto:hammadayub34@gmail.com"
-          style={{
-            color: '#b8b4a8',
-            transition: 'all 0.3s ease',
-            fontFamily: 'IBM Plex Mono, monospace',
-            fontSize: '0.875rem',
-            letterSpacing: '0.1em',
-            writingMode: 'vertical-rl',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#d4af37';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#b8b4a8';
-          }}
-        >
-          hammadayub34@gmail.com
-        </a>
-        <div style={{ width: '1px', height: '6rem', background: 'rgba(184, 180, 168, 0.5)' }}></div>
-      </div>
-
       <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
         <div style={{ textAlign: 'center' }}>
           {/* Greeting */}
@@ -408,10 +259,11 @@ const Hero = () => {
                 fontFamily: 'Crimson Pro, serif',
                 fontWeight: 900,
                 color: '#f5f1e8',
-                fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+                fontSize: 'clamp(1.8rem, 7vw, 6rem)',
                 lineHeight: 1.1,
                 letterSpacing: '-0.02em',
                 position: 'relative',
+                whiteSpace: 'nowrap',
               }}
             >
               <span style={{ position: 'relative', display: 'inline-block' }}>
@@ -545,23 +397,7 @@ const Hero = () => {
           zIndex: 3,
         }}
         aria-label="Scroll to projects"
-        onMouseEnter={(e) => {
-          const span = e.currentTarget.querySelector('span');
-          if (span) (span as HTMLElement).style.opacity = '1';
-        }}
-        onMouseLeave={(e) => {
-          const span = e.currentTarget.querySelector('span');
-          if (span) (span as HTMLElement).style.opacity = '0';
-        }}
       >
-        <span style={{
-          fontSize: '0.875rem',
-          fontFamily: 'IBM Plex Mono, monospace',
-          opacity: 0,
-          transition: 'opacity 0.3s ease',
-        }}>
-          Scroll Down
-        </span>
         <div className="animate-bounce">
           <FaArrowDown style={{ color: '#d4af37', fontSize: '1.5rem' }} />
         </div>
@@ -624,7 +460,9 @@ const Hero = () => {
 
       <style dangerouslySetInnerHTML={{__html: `
         @media (min-width: 1024px) {
-          .side-social-links,
+          .side-social-links {
+            left: 2rem !important;
+          }
           .side-email-link {
             display: flex !important;
           }

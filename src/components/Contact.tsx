@@ -359,18 +359,22 @@ const Contact = () => {
             display: 'flex',
             alignItems: 'center',
             marginBottom: '1rem',
+            whiteSpace: 'nowrap',
+            flexWrap: 'nowrap',
+            fontSize: 'clamp(1.4rem, 5vw, 3rem)',
           }}>
             <span style={{
               fontFamily: 'IBM Plex Mono, monospace',
               color: '#d4af37',
               fontSize: '1.5rem',
               marginRight: '1rem',
+              flexShrink: 0,
             }}>
-              04.
+              05.
             </span>
             <span style={{
               fontFamily: 'Crimson Pro, serif',
-              fontSize: 'clamp(2.5rem, 5vw, 3rem)',
+              fontSize: 'clamp(1.4rem, 5vw, 3rem)',
               fontWeight: 700,
             }}>
               Get In Touch
@@ -396,12 +400,265 @@ const Contact = () => {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr',
           gap: '3rem',
         }}
           className="contact-grid"
         >
-          {/* Contact Form - Takes 3 columns */}
+          {/* Contact Information Sidebar - shown first on mobile */}
+          <div ref={infoRef} className="info-column" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {/* Contact Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontFamily: 'Crimson Pro, serif',
+                color: '#f5f1e8',
+                marginBottom: '1rem',
+              }}>
+                Contact Information
+              </h3>
+              {contactInfo.map((info, index) => {
+                const IconComponent = info.icon;
+                return (
+                <div
+                  key={index}
+                  className="info-card"
+                  style={{
+                    padding: '1.25rem',
+                    background: index === 0 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1))' :
+                               index === 1 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05))' :
+                               'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), transparent)',
+                    border: '1px solid rgba(212, 175, 55, 0.1)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.1)';
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '1rem',
+                  }}>
+                    <div style={{
+                      width: '3rem',
+                      height: '3rem',
+                      flexShrink: 0,
+                      background: 'rgba(212, 175, 55, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#d4af37',
+                      transition: 'all 0.3s ease',
+                    }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#d4af37';
+                        e.currentTarget.style.color = '#0d0d0d';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                        e.currentTarget.style.color = '#d4af37';
+                      }}
+                    >
+                      <IconComponent size={20} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h4 style={{
+                        color: '#f5f1e8',
+                        fontFamily: 'Archivo, sans-serif',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                        marginBottom: '0.25rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                      }}>
+                        {info.title}
+                      </h4>
+                      {info.link ? (
+                        <a
+                          href={info.link}
+                          style={{
+                            color: '#b8b4a8',
+                            transition: 'color 0.3s ease',
+                            display: 'block',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            textDecoration: 'none',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#d4af37';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = '#b8b4a8';
+                          }}
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p style={{
+                          color: '#b8b4a8',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}>{info.value}</p>
+                      )}
+                      <p style={{
+                        color: '#8a8780',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        fontFamily: 'IBM Plex Mono, monospace',
+                      }}>
+                        {info.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+              })}
+            </div>
+
+            {/* Social Media Links */}
+            <div ref={socialRef} style={{
+              padding: '1.5rem',
+              background: 'rgba(26, 26, 26, 0.3)',
+              border: '1px solid rgba(212, 175, 55, 0.1)',
+            }}>
+              <h4 style={{
+                color: '#f5f1e8',
+                fontFamily: 'Crimson Pro, serif',
+                fontSize: '1.125rem',
+                marginBottom: '1rem',
+              }}>
+                Connect on Social
+              </h4>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                {socialLinks.map((social, index) => {
+                  const SocialIcon = social.icon;
+                  return (
+                  <a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="social-link"
+                    style={{
+                      width: '3rem',
+                      height: '3rem',
+                      background: 'rgba(212, 175, 55, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#b8b4a8',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#d4af37';
+                      e.currentTarget.style.color = '#0d0d0d';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                      e.currentTarget.style.color = '#b8b4a8';
+                    }}
+                  >
+                    <SocialIcon size={20} />
+                  </a>
+                );
+                })}
+              </div>
+            </div>
+
+            {/* Response Stats */}
+            <div ref={statsRef} style={{
+              padding: '1.5rem',
+              background: 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05))',
+              border: '1px solid rgba(212, 175, 55, 0.2)',
+            }}>
+              <h4 style={{
+                color: '#f5f1e8',
+                fontFamily: 'Crimson Pro, serif',
+                fontSize: '1.125rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}>
+                <div className="animate-pulse-glow" style={{
+                  width: '0.5rem',
+                  height: '0.5rem',
+                  borderRadius: '50%',
+                  background: '#d4af37',
+                }}></div>
+                Currently Available
+              </h4>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '1rem',
+                marginBottom: '1rem',
+              }}>
+                {responseStats.map((stat, index) => {
+                  const StatIcon = stat.icon;
+                  return (
+                  <div key={index} className="stat-item" style={{ textAlign: 'center' }}>
+                    <StatIcon style={{
+                      margin: '0 auto',
+                      color: '#d4af37',
+                      marginBottom: '0.5rem',
+                    }} size={20} />
+                    <div style={{
+                      color: '#f5f1e8',
+                      fontFamily: 'Crimson Pro, serif',
+                      fontWeight: 700,
+                      fontSize: '1.125rem',
+                    }}>
+                      {stat.value}
+                    </div>
+                    <div style={{
+                      color: '#8a8780',
+                      fontSize: '0.75rem',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      marginTop: '0.25rem',
+                    }}>
+                      {stat.label}
+                    </div>
+                  </div>
+                );
+                })}
+              </div>
+              <p style={{
+                color: '#b8b4a8',
+                fontSize: '0.875rem',
+                lineHeight: 1.8,
+                borderTop: '1px solid rgba(212, 175, 55, 0.2)',
+                paddingTop: '1rem',
+              }}>
+                I&apos;m currently available for freelance projects and full-time opportunities. Let&apos;s build something amazing together!
+              </p>
+            </div>
+
+            {/* Quick Note */}
+            <div style={{
+              padding: '1rem',
+              background: 'rgba(212, 175, 55, 0.05)',
+              borderLeft: '4px solid #d4af37',
+            }}>
+              <p style={{
+                color: '#b8b4a8',
+                fontSize: '0.875rem',
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontStyle: 'italic',
+              }}>
+                &quot;The best way to predict the future is to create it.&quot; - Let&apos;s create yours together.
+              </p>
+            </div>
+          </div>
+
+          {/* Contact Form */}
           <div className="form-column">
             <div style={{ marginBottom: '2rem' }}>
               <h3 style={{
@@ -699,266 +956,16 @@ const Contact = () => {
             </form>
           </div>
 
-          {/* Contact Information Sidebar - Takes 2 columns */}
-          <div ref={infoRef} className="info-column" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {/* Contact Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontFamily: 'Crimson Pro, serif',
-                color: '#f5f1e8',
-                marginBottom: '1rem',
-              }}>
-                Contact Information
-              </h3>
-              {contactInfo.map((info, index) => {
-                const IconComponent = info.icon;
-                return (
-                <div
-                  key={index}
-                  className="info-card"
-                  style={{
-                    padding: '1.25rem',
-                    background: index === 0 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1))' :
-                               index === 1 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05))' :
-                               'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), transparent)',
-                    border: '1px solid rgba(212, 175, 55, 0.1)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.1)';
-                  }}
-                >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '1rem',
-                  }}>
-                    <div style={{
-                      width: '3rem',
-                      height: '3rem',
-                      flexShrink: 0,
-                      background: 'rgba(212, 175, 55, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#d4af37',
-                      transition: 'all 0.3s ease',
-                    }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#d4af37';
-                        e.currentTarget.style.color = '#0d0d0d';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
-                        e.currentTarget.style.color = '#d4af37';
-                      }}
-                    >
-                      <IconComponent size={20} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <h4 style={{
-                        color: '#f5f1e8',
-                        fontFamily: 'Archivo, sans-serif',
-                        fontWeight: 600,
-                        fontSize: '0.875rem',
-                        marginBottom: '0.25rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                      }}>
-                        {info.title}
-                      </h4>
-                      {info.link ? (
-                        <a
-                          href={info.link}
-                          style={{
-                            color: '#b8b4a8',
-                            transition: 'color 0.3s ease',
-                            display: 'block',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            textDecoration: 'none',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#d4af37';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#b8b4a8';
-                          }}
-                        >
-                          {info.value}
-                        </a>
-                      ) : (
-                        <p style={{
-                          color: '#b8b4a8',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}>{info.value}</p>
-                      )}
-                      <p style={{
-                        color: '#8a8780',
-                        fontSize: '0.75rem',
-                        marginTop: '0.25rem',
-                        fontFamily: 'IBM Plex Mono, monospace',
-                      }}>
-                        {info.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-              })}
-            </div>
-
-            {/* Social Media Links */}
-            <div ref={socialRef} style={{
-              padding: '1.5rem',
-              background: 'rgba(26, 26, 26, 0.3)',
-              border: '1px solid rgba(212, 175, 55, 0.1)',
-            }}>
-              <h4 style={{
-                color: '#f5f1e8',
-                fontFamily: 'Crimson Pro, serif',
-                fontSize: '1.125rem',
-                marginBottom: '1rem',
-              }}>
-                Connect on Social
-              </h4>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                {socialLinks.map((social, index) => {
-                  const SocialIcon = social.icon;
-                  return (
-                  <a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="social-link"
-                    style={{
-                      width: '3rem',
-                      height: '3rem',
-                      background: 'rgba(212, 175, 55, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#b8b4a8',
-                      transition: 'all 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#d4af37';
-                      e.currentTarget.style.color = '#0d0d0d';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
-                      e.currentTarget.style.color = '#b8b4a8';
-                    }}
-                  >
-                    <SocialIcon size={20} />
-                  </a>
-                );
-                })}
-              </div>
-            </div>
-
-            {/* Response Stats */}
-            <div ref={statsRef} style={{
-              padding: '1.5rem',
-              background: 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05))',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
-            }}>
-              <h4 style={{
-                color: '#f5f1e8',
-                fontFamily: 'Crimson Pro, serif',
-                fontSize: '1.125rem',
-                marginBottom: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}>
-                <div className="animate-pulse-glow" style={{
-                  width: '0.5rem',
-                  height: '0.5rem',
-                  borderRadius: '50%',
-                  background: '#d4af37',
-                }}></div>
-                Currently Available
-              </h4>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '1rem',
-                marginBottom: '1rem',
-              }}>
-                {responseStats.map((stat, index) => {
-                  const StatIcon = stat.icon;
-                  return (
-                  <div key={index} className="stat-item" style={{ textAlign: 'center' }}>
-                    <StatIcon style={{
-                      margin: '0 auto',
-                      color: '#d4af37',
-                      marginBottom: '0.5rem',
-                    }} size={20} />
-                    <div style={{
-                      color: '#f5f1e8',
-                      fontFamily: 'Crimson Pro, serif',
-                      fontWeight: 700,
-                      fontSize: '1.125rem',
-                    }}>
-                      {stat.value}
-                    </div>
-                    <div style={{
-                      color: '#8a8780',
-                      fontSize: '0.75rem',
-                      fontFamily: 'IBM Plex Mono, monospace',
-                      marginTop: '0.25rem',
-                    }}>
-                      {stat.label}
-                    </div>
-                  </div>
-                );
-                })}
-              </div>
-              <p style={{
-                color: '#b8b4a8',
-                fontSize: '0.875rem',
-                lineHeight: 1.8,
-                borderTop: '1px solid rgba(212, 175, 55, 0.2)',
-                paddingTop: '1rem',
-              }}>
-                I&apos;m currently available for freelance projects and full-time opportunities. Let&apos;s build something amazing together!
-              </p>
-            </div>
-
-            {/* Quick Note */}
-            <div style={{
-              padding: '1rem',
-              background: 'rgba(212, 175, 55, 0.05)',
-              borderLeft: '4px solid #d4af37',
-            }}>
-              <p style={{
-                color: '#b8b4a8',
-                fontSize: '0.875rem',
-                fontFamily: 'IBM Plex Mono, monospace',
-                fontStyle: 'italic',
-              }}>
-                "The best way to predict the future is to create it." - Let's create yours together.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
         @media (min-width: 1024px) {
           .contact-grid {
-            grid-template-columns: 3fr 2fr;
+            grid-template-columns: 2fr 3fr;
           }
         }
       `}} />

@@ -209,7 +209,7 @@
    ============================================ */
 
 :root {
-  --section-padding: clamp(4rem, 8vw, 8rem);
+  --section-padding: clamp(2.5rem, 5vw, 5rem);
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 2rem;
@@ -762,7 +762,7 @@ section {
    ============================================ */
 
 @media (max-width: 768px) {
-  :root { --section-padding: clamp(3rem, 6vw, 4rem); }
+  :root { --section-padding: clamp(2rem, 5vw, 3rem); }
   .section-number { font-size: 4rem; }
   .animate-float { animation-duration: 4s; }
   .text-shadow-glow, .text-shadow-gold { text-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }
@@ -846,6 +846,87 @@ a, button, [role="button"], label, select, input[type="submit"], input[type="but
 }
 
 /* ============================================
+   DEPTH & DIMENSION
+   ============================================ */
+
+/* Stronger page-edge vignette — pulls viewer's eye to center */
+body::after {
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 45%, rgba(0,0,0,0.55) 100%);
+}
+
+/* Ambient center glow per section — adds a focal-point light source */
+#about::before,
+#skills::before,
+#projects::before,
+#contact::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 35%, rgba(212, 175, 55, 0.04) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Cards — resting depth so they feel lifted off the page */
+.card-hover {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.card-hover:hover {
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.7),
+    0 24px 64px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(212, 175, 55, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Header — stronger frosted glass */
+header {
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(212, 175, 55, 0.08) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.08) !important;
+}
+
+/* Form inputs — inset shadow gives a recessed "well" feel */
+input, textarea {
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45), inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+input:focus, textarea:focus {
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.12),
+    inset 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Skill progress track — inset depth */
+.skill-item > div:last-child {
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Skill bar fill — subtle glow on the progress */
+.skill-bar {
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.35), 0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+/* Contact info cards — glass morphism depth */
+.info-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Buttons — resting lift */
+.btn-primary {
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
    LIGHT THEME
    ============================================ */
 
@@ -867,36 +948,71 @@ a, button, [role="button"], label, select, input[type="submit"], input[type="but
   background-color: #f0ece3 !important;
 }
 
+.light-theme #about::before,
+.light-theme #skills::before,
+.light-theme #projects::before,
+.light-theme #contact::before {
+  display: none;
+}
+
+.light-theme .card-hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06) !important;
+}
+
+.light-theme input,
+.light-theme textarea {
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.08) !important;
+}
+
+.light-theme .btn-primary {
+  box-shadow: 0 4px 16px rgba(212,175,55,0.3) !important;
+}
+
+.light-theme .skill-bar {
+  box-shadow: 0 0 8px rgba(212,175,55,0.25) !important;
+}
+
 .light-theme #home {
   background: linear-gradient(135deg, #f0ece3 0%, #e8e4d8 100%) !important;
 }
 
-/* ---- Typography (override all inline color styles) ---- */
-.light-theme h1,
-.light-theme h2,
-.light-theme h3,
-.light-theme h4,
-.light-theme h5,
-.light-theme h6 {
+/* ---- Footer background ---- */
+.light-theme footer {
+  background: #f0ece3 !important;
+}
+
+/* ---- Typography (broad override — beats React inline styles) ---- */
+/* Covers all elements including spans, divs, labels with inline color styles */
+.light-theme section *,
+.light-theme footer * {
+  color: #2a2a2a !important;
+}
+
+/* Gold restore — [style*="212, 175, 55"] matches rgb(212, 175, 55) = #d4af37
+   Specificity (0,2,0) beats broad rule (0,1,1) so gold elements stay gold */
+.light-theme [style*="212, 175, 55"] {
+  color: #d4af37 !important;
+}
+
+/* Muted text restore for elements with #b8b4a8 inline color */
+.light-theme [style*="184, 180, 168"] {
+  color: #6a6760 !important;
+}
+
+/* Form labels (no inline color set) */
+.light-theme label {
   color: #1a1a1a !important;
 }
 
-.light-theme p {
-  color: #4a4742 !important;
-}
-
-.light-theme li {
-  color: #4a4742 !important;
-}
-
-/* Secondary/muted text spans inside sections */
-.light-theme section span:not([style*="d4af37"]) {
-  color: #4a4742;
-}
-
-/* Keep section number labels gold */
-.light-theme section span[style*="1.5rem"] {
+/* Buttons */
+.light-theme .btn-outline {
   color: #d4af37 !important;
+  border-color: #d4af37 !important;
+  background: transparent !important;
+}
+.light-theme .btn-primary {
+  color: #0d0d0d !important;
+  background: #d4af37 !important;
 }
 
 /* ---- Header ---- */

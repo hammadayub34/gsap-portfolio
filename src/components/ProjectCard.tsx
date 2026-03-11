@@ -44,8 +44,11 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         backdropFilter: 'blur(10px)',
         borderRadius: '0.5rem',
         overflow: 'hidden',
-        border: '1px solid rgba(212, 175, 55, 0.1)',
-        transition: 'border-color 0.3s ease',
+        border: '1px solid rgba(212, 175, 55, 0.12)',
+        transition: 'border-color 0.3s ease, box-shadow 0.4s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.35)';
@@ -92,6 +95,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
+        flex: 1,
       }}>
         {/* Featured Badge */}
         {project.featured && (
@@ -132,6 +136,8 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         <p style={{
           color: '#b8b4a8',
           lineHeight: 1.8,
+          flex: 1,
+          textAlign: 'justify',
         }}>
           {project.description}
         </p>

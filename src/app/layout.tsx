@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import SideLinks from '@/components/SideLinks'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://hammadayub.dev'),
@@ -82,13 +83,16 @@ export default function RootLayout({
         {/* Page wrapper */}
         <div className="page-wrapper">
           <Header />
-          
-          <main id="main-content" className="relative z-10 flex-1" role="main">
+
+          <main id="main-content" className="relative flex-1" role="main">
             {children}
           </main>
-          
+
           <Footer />
         </div>
+
+        {/* Fixed side links — outside main to avoid stacking context trap */}
+        <SideLinks />
 
         {/* Cursor follower */}
         <div id="cursor-follower" className="cursor-follower" />
