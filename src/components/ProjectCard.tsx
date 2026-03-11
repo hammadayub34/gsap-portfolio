@@ -40,9 +40,8 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       className="card-hover"
       style={{
         position: 'relative',
-        background: 'rgba(26, 26, 26, 0.5)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '0.5rem',
+        background: '#161616',
+        borderRadius: '8px',
         overflow: 'hidden',
         border: '1px solid rgba(212, 175, 55, 0.12)',
         transition: 'border-color 0.3s ease, box-shadow 0.4s ease',

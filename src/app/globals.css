@@ -505,6 +505,7 @@ p {
   transition: all var(--duration-normal) var(--transition-smooth);
   position: relative;
   overflow: hidden;
+  border-radius: 4px;
 }
 
 .btn-primary {
@@ -551,8 +552,9 @@ p {
    ============================================ */
 
 .card {
-  background: #1a1a1a;
+  background: #161616;
   border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 8px;
   transition: all var(--duration-normal) var(--transition-smooth);
 }
 
@@ -572,6 +574,7 @@ p {
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease;
   position: relative;
   will-change: transform;
+  border-radius: 8px;
 }
 
 .card-hover::before {
@@ -590,7 +593,7 @@ p {
 }
 
 .card-hover:hover::before { opacity: 1; }
-.card-hover:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0,0,0,0.4), 0 0 30px rgba(212, 175, 55, 0.15); }
+.card-hover:hover { transform: translateY(-6px); box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 16px 40px rgba(0,0,0,0.3), 0 0 20px rgba(212, 175, 55, 0.12); }
 
 /* ============================================
    ANIMATIONS
@@ -660,13 +663,13 @@ a:hover { color: #e8c968; }
 input, textarea, select {
   width: 100%;
   padding: 1rem;
-  background: #1a1a1a;
+  background: #161616;
   border: 1px solid rgba(212, 175, 55, 0.2);
   color: #f5f1e8;
   font-family: 'Archivo', sans-serif;
   font-size: 1rem;
   transition: all var(--duration-normal) ease;
-  border-radius: 0;
+  border-radius: 4px;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -870,9 +873,9 @@ body::after {
 /* Cards — resting depth so they feel lifted off the page */
 .card-hover {
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.5),
-    0 8px 24px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
 }
 
 .card-hover:hover {
@@ -1039,6 +1042,11 @@ input:focus, textarea:focus {
   box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
 }
 
+.light-theme .card-hover:hover {
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 16px 40px rgba(0,0,0,0.08), 0 0 20px rgba(212, 175, 55, 0.18) !important;
+}
+
 /* ---- All dark panel/box backgrounds in sections ---- */
 /* Targets divs with dark rgba backgrounds (skill info box, contact panels, etc.) */
 .light-theme section div[style*="rgba(26, 26, 26"],
@@ -1046,6 +1054,27 @@ input:focus, textarea:focus {
 .light-theme section div[style*="rgba(13, 13, 13"] {
   background: rgba(225, 221, 210, 0.7) !important;
   border-color: rgba(212, 175, 55, 0.2) !important;
+}
+
+/* ---- Skills cards, featured project, contact dark panels ---- */
+.light-theme .skill-group-card,
+.light-theme .featured-project,
+.light-theme .contact-dark-card {
+  background: rgba(225, 221, 210, 0.9) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+
+/* ---- Inset description panel inside featured project ---- */
+.light-theme .project-desc-panel {
+  background: rgba(210, 205, 192, 0.8) !important;
+}
+
+/* Restore gold left-border accents on cards that have them */
+.light-theme .skill-group-card {
+  border-left-color: #d4af37 !important;
+}
+.light-theme .contact-dark-card[style*="border-left"] {
+  border-left-color: #d4af37 !important;
 }
 
 /* Skill progress bar track */
@@ -1080,10 +1109,16 @@ input:focus, textarea:focus {
   opacity: 0.06 !important;
 }
 
+/* ---- Featured project card ---- */
+.light-theme .featured-project {
+  background: rgba(225, 221, 210, 0.9) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+}
+
 /* ---- Info cards in contact section ---- */
 .light-theme .info-card {
-  background: linear-gradient(to bottom right, rgba(212, 175, 55, 0.12), rgba(212, 175, 55, 0.06)) !important;
-  border-color: rgba(212, 175, 55, 0.2) !important;
+  background: rgba(225, 221, 210, 0.9) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
 }
 
 /* ---- Mobile menu links ---- */

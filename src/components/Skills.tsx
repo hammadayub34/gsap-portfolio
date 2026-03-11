@@ -165,14 +165,18 @@ const Skills = () => {
           {skillGroups.map((group, groupIndex) => (
             <div
               key={groupIndex}
+              className="skill-group-card"
               style={{
                 padding: '2rem',
-                background: 'rgba(26, 26, 26, 0.6)',
-                backdropFilter: 'blur(16px)',
+                background: '#161616',
                 border: '1px solid rgba(212, 175, 55, 0.12)',
-                borderTop: '2px solid #d4af37',
+                borderLeft: '3px solid #d4af37',
+                borderRadius: '8px',
                 position: 'relative',
                 overflow: 'hidden',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               {/* Card ambient glow */}
@@ -182,7 +186,7 @@ const Skills = () => {
               }} />
 
               {/* Group header */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', position: 'relative' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', position: 'relative', height: '6.5rem', overflow: 'hidden', flexShrink: 0 }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
                     <span style={{

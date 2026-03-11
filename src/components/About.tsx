@@ -257,7 +257,7 @@ const About = () => {
               <div style={{
                 position: 'relative',
                 zIndex: 10,
-                borderRadius: '0',
+                borderRadius: '8px',
                 overflow: 'hidden',
               }}>
                 <div style={{

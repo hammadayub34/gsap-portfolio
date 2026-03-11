@@ -351,7 +351,7 @@ const Contact = () => {
         opacity: 0.2,
       }}></div>
 
-      <div className="container-custom" style={{ position: 'relative', zIndex: 10, maxWidth: '1200px' }}>
+      <div className="container-custom" style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', width: '100%' }}>
         {/* Section Title */}
         <div ref={titleRef} style={{ marginBottom: '4rem' }}>
           <h2 style={{
@@ -387,11 +387,10 @@ const Contact = () => {
               maxWidth: '20rem',
             }}></span>
           </h2>
-          <p style={{
+          <p className="contact-subtitle" style={{
             color: '#b8b4a8',
             fontSize: '1.125rem',
             maxWidth: '42rem',
-            marginLeft: '4rem',
             fontFamily: 'Archivo, sans-serif',
           }}>
             Have a project in mind or just want to chat? I&apos;m always open to discussing new opportunities, creative ideas, or partnerships.
@@ -424,10 +423,11 @@ const Contact = () => {
                   className="info-card"
                   style={{
                     padding: '1.25rem',
-                    background: index === 0 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1))' :
-                               index === 1 ? 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05))' :
-                               'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), transparent)',
-                    border: '1px solid rgba(212, 175, 55, 0.1)',
+                    background: '#161616',
+                    border: '1px solid rgba(212, 175, 55, 0.12)',
+                    borderLeft: '3px solid rgba(212, 175, 55, 0.6)',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                   }}
@@ -522,10 +522,12 @@ const Contact = () => {
             </div>
 
             {/* Social Media Links */}
-            <div ref={socialRef} style={{
+            <div ref={socialRef} className="contact-dark-card" style={{
               padding: '1.5rem',
-              background: 'rgba(26, 26, 26, 0.3)',
+              background: '#161616',
               border: '1px solid rgba(212, 175, 55, 0.1)',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}>
               <h4 style={{
                 color: '#f5f1e8',
@@ -573,10 +575,12 @@ const Contact = () => {
             </div>
 
             {/* Response Stats */}
-            <div ref={statsRef} style={{
+            <div ref={statsRef} className="contact-dark-card" style={{
               padding: '1.5rem',
-              background: 'linear-gradient(to bottom right, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05))',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
+              background: '#161616',
+              border: '1px solid rgba(212, 175, 55, 0.15)',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}>
               <h4 style={{
                 color: '#f5f1e8',
@@ -642,10 +646,12 @@ const Contact = () => {
             </div>
 
             {/* Quick Note */}
-            <div style={{
+            <div className="contact-dark-card" style={{
               padding: '1rem',
-              background: 'rgba(212, 175, 55, 0.05)',
+              background: '#161616',
               borderLeft: '4px solid #d4af37',
+              borderRadius: '4px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}>
               <p style={{
                 color: '#b8b4a8',
@@ -711,12 +717,12 @@ const Contact = () => {
                   style={{
                     width: '100%',
                     padding: '0.75rem 1rem',
-                    background: 'rgba(26, 26, 26, 0.5)',
+                    background: '#161616',
                     border: errors.name && touched.name ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
+                    borderRadius: '4px',
                     color: '#f5f1e8',
                     outline: 'none',
                     transition: 'all 0.3s ease',
-                    backdropFilter: 'blur(10px)',
                     fontFamily: 'Archivo, sans-serif',
                   }}
                   placeholder="John Doe"
@@ -776,12 +782,12 @@ const Contact = () => {
                   style={{
                     width: '100%',
                     padding: '0.75rem 1rem',
-                    background: 'rgba(26, 26, 26, 0.5)',
+                    background: '#161616',
                     border: errors.email && touched.email ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
+                    borderRadius: '4px',
                     color: '#f5f1e8',
                     outline: 'none',
                     transition: 'all 0.3s ease',
-                    backdropFilter: 'blur(10px)',
                     fontFamily: 'Archivo, sans-serif',
                   }}
                   placeholder="john@example.com"
@@ -854,13 +860,13 @@ const Contact = () => {
                   style={{
                     width: '100%',
                     padding: '0.75rem 1rem',
-                    background: 'rgba(26, 26, 26, 0.5)',
+                    background: '#161616',
                     border: errors.message && touched.message ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
+                    borderRadius: '4px',
                     color: '#f5f1e8',
                     outline: 'none',
                     transition: 'all 0.3s ease',
                     resize: 'none',
-                    backdropFilter: 'blur(10px)',
                     fontFamily: 'Archivo, sans-serif',
                   }}
                   placeholder="Hello! I'd like to discuss..."
@@ -935,7 +941,7 @@ const Contact = () => {
                   style={{
                     padding: '1rem',
                     border: `1px solid ${submitStatus === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                    backdropFilter: 'blur(10px)',
+                    borderRadius: '4px',
                     fontFamily: 'Archivo, sans-serif',
                     fontSize: '0.875rem',
                     display: 'flex',
@@ -963,9 +969,15 @@ const Contact = () => {
         .contact-grid {
           grid-template-columns: 1fr;
         }
+        .contact-subtitle {
+          margin-left: 0;
+        }
         @media (min-width: 1024px) {
           .contact-grid {
             grid-template-columns: 2fr 3fr;
+          }
+          .contact-subtitle {
+            margin-left: 4rem;
           }
         }
       `}} />

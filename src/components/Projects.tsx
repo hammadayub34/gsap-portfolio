@@ -124,13 +124,14 @@ const Projects = () => {
           className="featured-project"
           style={{
             display: 'grid',
-            background: 'rgba(26, 26, 26, 0.6)',
-            backdropFilter: 'blur(16px)',
+            background: '#161616',
             border: '1px solid rgba(212, 175, 55, 0.15)',
-            borderTop: '2px solid #d4af37',
+            borderTop: '3px solid #d4af37',
+            borderRadius: '8px',
             overflow: 'hidden',
             marginBottom: '2rem',
             transition: 'border-color 0.3s ease, box-shadow 0.4s ease',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.4)';
@@ -194,11 +195,10 @@ const Projects = () => {
               {featured.title}
             </h3>
 
-            <div style={{
+            <div className="project-desc-panel" style={{
               padding: '1.25rem',
-              background: 'rgba(13, 13, 13, 0.4)',
               border: '1px solid rgba(212, 175, 55, 0.08)',
-              backdropFilter: 'blur(8px)',
+              borderRadius: '4px',
             }}>
               <p style={{
                 color: '#b8b4a8',
