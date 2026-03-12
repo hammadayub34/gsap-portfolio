@@ -345,7 +345,7 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    { icon: FaFacebook, url: 'https://facebook.com/hammadayub34', label: 'Facebook', brand: '#1877f2' },
+    { icon: FaFacebook, url: 'https://facebook.com/hammadayub1999', label: 'Facebook', brand: '#1877f2' },
     { icon: FaLinkedin, url: 'https://linkedin.com/in/hammadayub34', label: 'LinkedIn', brand: '#0a66c2' },
     { icon: FaTwitter, url: 'https://twitter.com/hammadayub34', label: 'Twitter', brand: '#1d9bf0' },
   ];
