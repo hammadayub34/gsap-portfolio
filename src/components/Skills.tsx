@@ -3,12 +3,18 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import {
+  SiNodedotjs, SiPython, SiReact, SiNextdotjs, SiTypescript,
+  SiMongodb, SiPostgresql, SiDocker, SiFastapi, SiZapier,
+  SiHubspot, SiJavascript, SiAmazonwebservices, SiFlutter,
+} from 'react-icons/si';
 
 const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const skillItemRefs = useRef<HTMLDivElement[]>([]);
   const skillBarRefs = useRef<HTMLDivElement[]>([]);
+  const percentRefs = useRef<{ el: HTMLSpanElement; target: number }[]>([]);
 
   const skillGroups = [
     {
@@ -95,6 +101,26 @@ const Skills = () => {
           },
         });
       }
+
+      // Count-up animation for percentage numbers
+      percentRefs.current.forEach(({ el, target }, i) => {
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 1.4,
+          delay: i * 0.06,
+          ease: 'expo.out',
+          snap: { val: 1 },
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 65%',
+          },
+          onUpdate() {
+            el.textContent = `${Math.round(obj.val)}%`;
+          },
+        });
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -106,6 +132,12 @@ const Skills = () => {
 
   const setSkillBarRef = (el: HTMLDivElement | null) => {
     if (el && !skillBarRefs.current.includes(el)) skillBarRefs.current.push(el);
+  };
+
+  const setPercentRef = (el: HTMLSpanElement | null, target: number) => {
+    if (el && !percentRefs.current.find((r) => r.el === el)) {
+      percentRefs.current.push({ el, target });
+    }
   };
 
   return (
@@ -141,6 +173,7 @@ const Skills = () => {
         {/* Section Title */}
         <h2
           ref={titleRef}
+          className="section-title-mb"
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
@@ -151,10 +184,11 @@ const Skills = () => {
             fontWeight: 700,
             whiteSpace: 'nowrap',
             flexWrap: 'nowrap',
+            overflow: 'hidden',
           }}
         >
           <span style={{ fontFamily: 'IBM Plex Mono, monospace', color: '#d4af37', fontSize: '1.5rem', marginRight: '1rem', flexShrink: 0 }}>
-            03.
+            02.
           </span>
           Skills & Expertise
           <span style={{ marginLeft: '2rem', height: '1px', background: 'rgba(184, 180, 168, 0.3)', flex: 1, maxWidth: '20rem' }} />
@@ -168,13 +202,14 @@ const Skills = () => {
               className="skill-group-card"
               style={{
                 padding: '2rem',
-                background: '#161616',
-                border: '1px solid rgba(212, 175, 55, 0.12)',
-                borderLeft: '3px solid #d4af37',
-                borderRadius: '8px',
+                background: 'rgba(255,255,255,0.025)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: '16px',
                 position: 'relative',
                 overflow: 'hidden',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
                 display: 'flex',
                 flexDirection: 'column',
               }}
@@ -184,9 +219,15 @@ const Skills = () => {
                 position: 'absolute', inset: 0, pointerEvents: 'none',
                 background: `radial-gradient(ellipse at top left, ${group.accent} 0%, transparent 60%)`,
               }} />
+              {/* Thin gold shimmer line at top */}
+              <div style={{
+                position: 'absolute', top: 0, left: '10%', right: '10%', height: '1px',
+                background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent)',
+                pointerEvents: 'none',
+              }} />
 
               {/* Group header */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', position: 'relative', height: '6.5rem', overflow: 'hidden', flexShrink: 0 }}>
+              <div className="skill-card-header" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', position: 'relative' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
                     <span style={{
@@ -241,21 +282,23 @@ const Skills = () => {
                       }}>
                         {skill.name}
                       </span>
-                      <span style={{
-                        color: '#d4af37',
-                        fontFamily: 'IBM Plex Mono, monospace',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                      }}>
+                      <span
+                        ref={(el) => setPercentRef(el, skill.level)}
+                        style={{
+                          color: '#d4af37',
+                          fontFamily: 'IBM Plex Mono, monospace',
+                          fontSize: '0.8rem',
+                          fontWeight: 600,
+                        }}
+                      >
                         {skill.level}%
                       </span>
                     </div>
                     <div style={{
-                      height: '6px',
-                      background: '#1e1e1e',
+                      height: '4px',
+                      background: 'rgba(255,255,255,0.06)',
                       borderRadius: '9999px',
                       overflow: 'hidden',
-                      border: '1px solid rgba(255,255,255,0.04)',
                     }}>
                       <div
                         className="skill-bar"
@@ -263,7 +306,7 @@ const Skills = () => {
                         style={{
                           height: '100%',
                           width: `${skill.level}%`,
-                          background: 'linear-gradient(to right, #b8941f, #d4af37, #e8c968)',
+                          background: 'linear-gradient(90deg, #b8941f 0%, #d4af37 60%, #f0d060 100%)',
                           borderRadius: '9999px',
                         }}
                       />
@@ -275,17 +318,58 @@ const Skills = () => {
           ))}
         </div>
 
+        {/* Tech Stack Marquee */}
+        {(() => {
+          const techStack = [
+            { Icon: SiNodedotjs,         label: 'Node.js',     color: '#68a063' },
+            { Icon: SiPython,            label: 'Python',      color: '#4584b6' },
+            { Icon: SiReact,             label: 'React',       color: '#61dafb' },
+            { Icon: SiNextdotjs,         label: 'Next.js',     color: '#f5f1e8' },
+            { Icon: SiTypescript,        label: 'TypeScript',  color: '#3178c6' },
+            { Icon: SiJavascript,        label: 'JavaScript',  color: '#f7df1e' },
+            { Icon: SiMongodb,           label: 'MongoDB',     color: '#4db33d' },
+            { Icon: SiPostgresql,        label: 'PostgreSQL',  color: '#336791' },
+            { Icon: SiDocker,            label: 'Docker',      color: '#2496ed' },
+            { Icon: SiAmazonwebservices, label: 'AWS',         color: '#ff9900' },
+            { Icon: SiFastapi,           label: 'FastAPI',     color: '#009688' },
+            { Icon: SiFlutter,           label: 'Flutter',     color: '#54c5f8' },
+            { Icon: SiZapier,            label: 'Zapier',      color: '#ff4a00' },
+            { Icon: SiHubspot,           label: 'HubSpot',     color: '#ff7a59' },
+          ];
+          const items = [...techStack, ...techStack];
+          return (
+            <div style={{ margin: '3rem 0', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '5rem', background: 'linear-gradient(to right, #0d0d0d, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '5rem', background: 'linear-gradient(to left, #0d0d0d, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+              <div className="tech-marquee-track">
+                {items.map(({ Icon, label, color }, i) => (
+                  <div key={i} className="tech-marquee-item">
+                    <Icon size={26} style={{ color, flexShrink: 0 }} />
+                    <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.75rem', color: '#8a8780', whiteSpace: 'nowrap' }}>
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Currently Learning banner */}
         <div style={{
           marginTop: '3rem',
           padding: '1.5rem 2rem',
-          background: 'linear-gradient(to right, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.03))',
-          border: '1px solid rgba(212, 175, 55, 0.2)',
-          borderLeft: '3px solid #d4af37',
+          background: 'rgba(255,255,255,0.025)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.07)',
+          borderRadius: '12px',
           display: 'flex',
           alignItems: 'center',
           gap: '1.5rem',
           flexWrap: 'wrap',
+          position: 'relative',
+          overflow: 'hidden',
         }}>
           <span style={{
             fontFamily: 'IBM Plex Mono, monospace',
@@ -320,10 +404,53 @@ const Skills = () => {
         .skills-grid {
           grid-template-columns: 1fr;
         }
+        @media (min-width: 600px) and (max-width: 899px) {
+          .skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
         @media (min-width: 900px) {
           .skills-grid {
             grid-template-columns: repeat(3, 1fr);
           }
+        }
+        @media (max-width: 640px) {
+          .skill-group-card {
+            padding: 1.25rem !important;
+          }
+          .skills-grid {
+            gap: 1.25rem;
+          }
+        }
+
+        @keyframes marquee-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .tech-marquee-track {
+          display: flex;
+          width: max-content;
+          animation: marquee-scroll 28s linear infinite;
+        }
+        .tech-marquee-track:hover {
+          animation-play-state: paused;
+        }
+        .tech-marquee-item {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.6rem 1.25rem;
+          margin: 0 0.25rem;
+          background: rgba(212, 175, 55, 0.04);
+          border: 1px solid rgba(212, 175, 55, 0.1);
+          border-radius: 6px;
+          transition: background 0.3s ease, border-color 0.3s ease;
+          white-space: nowrap;
+          cursor: default;
+        }
+        .tech-marquee-item:hover {
+          background: rgba(212, 175, 55, 0.1);
+          border-color: rgba(212, 175, 55, 0.3);
         }
       `}} />
     </section>

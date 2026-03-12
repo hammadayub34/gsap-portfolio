@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaHeart } from 'react-icons/fa';
+import { FaGithub, FaEnvelope, FaHeart } from 'react-icons/fa';
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
@@ -31,8 +31,6 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: FaGithub, href: 'https://github.com/hammadayub34', label: 'GitHub' },
-    { icon: FaLinkedin, href: 'https://linkedin.com/in/hammadayub34', label: 'LinkedIn' },
-    { icon: FaTwitter, href: 'https://twitter.com/hammadayub34', label: 'Twitter' },
     { icon: FaEnvelope, href: 'mailto:hammadayub34@gmail.com', label: 'Email' },
   ];
 
@@ -41,9 +39,9 @@ const Footer = () => {
       ref={footerRef}
       style={{
         position: 'relative',
-        padding: '2rem 0',
-        background: '#0d0d0d',
-        borderTop: '1px solid rgba(212, 175, 55, 0.12)',
+        padding: '2.5rem 0',
+        background: 'transparent',
+        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
       }}
     >
       {/* Grid pattern — matches other sections */}
@@ -64,25 +62,28 @@ const Footer = () => {
                 style={{
                   width: '2.75rem',
                   height: '2.75rem',
+                  borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'rgba(212, 175, 55, 0.08)',
-                  border: '1px solid rgba(212, 175, 55, 0.15)',
-                  color: '#b8b4a8',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#8a8780',
                   transition: 'all 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#d4af37';
-                  e.currentTarget.style.color = '#0d0d0d';
-                  e.currentTarget.style.borderColor = '#d4af37';
+                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.15)';
+                  e.currentTarget.style.color = '#d4af37';
+                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.4)';
                   e.currentTarget.style.transform = 'translateY(-3px)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(212,175,55,0.15)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.08)';
-                  e.currentTarget.style.color = '#b8b4a8';
-                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.15)';
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                  e.currentTarget.style.color = '#8a8780';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
                   e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '';
                 }}
               >
                 <social.icon size={18} />

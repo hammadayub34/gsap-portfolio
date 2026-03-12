@@ -7,14 +7,16 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaGithub,
+  FaFacebook,
   FaLinkedin,
   FaTwitter,
   FaPaperPlane,
   FaCheckCircle,
   FaExclamationCircle,
   FaClock,
-  FaCalendarAlt
+  FaCalendarAlt,
+  FaUser,
+  FaCommentAlt,
 } from 'react-icons/fa';
 import { ContactForm } from '@/types';
 const Contact = () => {
@@ -91,22 +93,47 @@ const Contact = () => {
         });
       }
 
-      // Social links — own trigger
-      const socialLinks = socialRef.current?.querySelectorAll('.social-link');
-      if (socialLinks && socialLinks.length > 0) {
-        gsap.from(socialLinks, {
+      // Social links — entrance + continuous float
+      const socialIconEls = socialRef.current?.querySelectorAll('.social-link');
+      if (socialIconEls && socialIconEls.length > 0) {
+        gsap.from(socialIconEls, {
           opacity: 0,
           scale: 0,
-          duration: 0.5,
-          stagger: 0.1,
+          duration: 0.6,
+          stagger: 0.12,
           ease: 'back.out(1.7)',
           immediateRender: false,
           scrollTrigger: {
             trigger: socialRef.current,
-            start: 'top 90%',
+            start: 'top 92%',
           },
         });
+        socialIconEls.forEach((icon, i) => {
+          gsap.to(icon, {
+            y: -8,
+            duration: 1.6 + i * 0.3,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: 1.0 + i * 0.4,
+          });
+        });
       }
+
+      // Available dot rings
+      const availableRings = statsRef.current?.querySelectorAll('.available-ring');
+      availableRings?.forEach((ring, i) => {
+        gsap.fromTo(ring,
+          { scale: 1, opacity: 0.6 },
+          { scale: 2.8, opacity: 0, duration: 2.2, delay: i * 0.9, repeat: -1, ease: 'power2.out' }
+        );
+      });
+
+      // Stat icon gentle pulse
+      const statIcons = statsRef.current?.querySelectorAll('.stat-icon');
+      statIcons?.forEach((icon, i) => {
+        gsap.to(icon, { scale: 1.18, duration: 1.3 + i * 0.2, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.5 });
+      });
 
       // Stats — own trigger
       const statItems = statsRef.current?.querySelectorAll('.stat-item');
@@ -124,6 +151,35 @@ const Contact = () => {
           },
         });
       }
+
+      // Location pin pulsing rings
+      const rings = sectionRef.current?.querySelectorAll('.location-pulse-ring');
+      rings?.forEach((ring, i) => {
+        gsap.fromTo(ring,
+          { scale: 0.8, opacity: 0.7 },
+          { scale: 2.4, opacity: 0, duration: 2, delay: i * 0.75, repeat: -1, ease: 'power2.out' }
+        );
+      });
+
+      // Email icon subtle pulse
+      gsap.to('.contact-email-orb', {
+        boxShadow: '0 0 20px rgba(212, 175, 55, 0.35)',
+        duration: 1.4,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+
+      // Phone icon ring tilt
+      gsap.to('.contact-phone-icon', {
+        rotation: 18,
+        duration: 0.15,
+        repeat: -1,
+        repeatDelay: 3,
+        yoyo: true,
+        yoyoEase: 'power2.inOut',
+        ease: 'power2.inOut',
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -289,9 +345,9 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    { icon: FaGithub, url: 'https://github.com/hammadayub34', label: 'GitHub', color: 'hover:text-white' },
-    { icon: FaLinkedin, url: 'https://linkedin.com/in/hammadayub34', label: 'LinkedIn', color: 'hover:text-blue-400' },
-    { icon: FaTwitter, url: 'https://twitter.com', label: 'Twitter', color: 'hover:text-sky-400' },
+    { icon: FaFacebook, url: 'https://facebook.com/hammadayub34', label: 'Facebook', brand: '#1877f2' },
+    { icon: FaLinkedin, url: 'https://linkedin.com/in/hammadayub34', label: 'LinkedIn', brand: '#0a66c2' },
+    { icon: FaTwitter, url: 'https://twitter.com/hammadayub34', label: 'Twitter', brand: '#1d9bf0' },
   ];
 
   const responseStats = [
@@ -353,7 +409,7 @@ const Contact = () => {
 
       <div className="container-custom" style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', width: '100%' }}>
         {/* Section Title */}
-        <div ref={titleRef} style={{ marginBottom: '4rem' }}>
+        <div ref={titleRef} className="section-title-mb" style={{ marginBottom: '4rem' }}>
           <h2 style={{
             color: '#f5f1e8',
             display: 'flex',
@@ -370,7 +426,7 @@ const Contact = () => {
               marginRight: '1rem',
               flexShrink: 0,
             }}>
-              05.
+              06.
             </span>
             <span style={{
               fontFamily: 'Crimson Pro, serif',
@@ -391,7 +447,7 @@ const Contact = () => {
             color: '#b8b4a8',
             fontSize: '1.125rem',
             maxWidth: '42rem',
-            fontFamily: 'Archivo, sans-serif',
+            fontFamily: 'Inter, sans-serif',
           }}>
             Have a project in mind or just want to chat? I&apos;m always open to discussing new opportunities, creative ideas, or partnerships.
           </p>
@@ -399,12 +455,25 @@ const Contact = () => {
 
         <div style={{
           display: 'grid',
-          gap: '3rem',
+          gap: '2rem',
+          alignItems: 'start',
         }}
           className="contact-grid"
         >
           {/* Contact Information Sidebar - shown first on mobile */}
-          <div ref={infoRef} className="info-column" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div ref={infoRef} className="info-column" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem',
+            background: 'rgba(255,255,255,0.025)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.07)',
+            borderRadius: '20px',
+            padding: '2rem',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
             {/* Contact Cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <h3 style={{
@@ -417,103 +486,125 @@ const Contact = () => {
               </h3>
               {contactInfo.map((info, index) => {
                 const IconComponent = info.icon;
+                const isLocation = info.title === 'Location';
+                const isEmail = info.title === 'Email';
+                const isPhone = info.title === 'Phone';
                 return (
                 <div
                   key={index}
                   className="info-card"
                   style={{
-                    padding: '1.25rem',
-                    background: '#161616',
-                    border: '1px solid rgba(212, 175, 55, 0.12)',
-                    borderLeft: '3px solid rgba(212, 175, 55, 0.6)',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.25rem',
+                    padding: '1.25rem 0',
+                    borderBottom: index < contactInfo.length - 1
+                      ? '1px solid rgba(255,255,255,0.05)'
+                      : 'none',
                     transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.1)';
+                    cursor: 'default',
                   }}
                 >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '1rem',
-                  }}>
-                    <div style={{
-                      width: '3rem',
-                      height: '3rem',
-                      flexShrink: 0,
-                      background: 'rgba(212, 175, 55, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#d4af37',
-                      transition: 'all 0.3s ease',
-                    }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#d4af37';
-                        e.currentTarget.style.color = '#0d0d0d';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
-                        e.currentTarget.style.color = '#d4af37';
+                  {/* Animated icon orb */}
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
+                    {/* Pulsing rings for location */}
+                    {isLocation && <>
+                      <div className="location-pulse-ring" style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '50%',
+                        border: '1px solid rgba(212, 175, 55, 0.5)',
+                        pointerEvents: 'none',
+                      }} />
+                      <div className="location-pulse-ring" style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '50%',
+                        border: '1px solid rgba(212, 175, 55, 0.3)',
+                        pointerEvents: 'none',
+                      }} />
+                    </>}
+                    <div
+                      className={isEmail ? 'contact-email-orb' : isPhone ? 'contact-phone-orb' : ''}
+                      style={{
+                        width: '3.25rem',
+                        height: '3.25rem',
+                        borderRadius: '50%',
+                        background: 'rgba(212, 175, 55, 0.08)',
+                        border: '1px solid rgba(212, 175, 55, 0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#d4af37',
+                        position: 'relative',
                       }}
                     >
-                      <IconComponent size={20} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <h4 style={{
-                        color: '#f5f1e8',
-                        fontFamily: 'Archivo, sans-serif',
-                        fontWeight: 600,
-                        fontSize: '0.875rem',
-                        marginBottom: '0.25rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                      }}>
-                        {info.title}
-                      </h4>
-                      {info.link ? (
-                        <a
-                          href={info.link}
-                          style={{
-                            color: '#b8b4a8',
-                            transition: 'color 0.3s ease',
-                            display: 'block',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            textDecoration: 'none',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#d4af37';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#b8b4a8';
-                          }}
-                        >
-                          {info.value}
-                        </a>
+                      {isLocation ? (
+                        /* Animated globe SVG */
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round">
+                          <circle cx="12" cy="12" r="10"/>
+                          <ellipse cx="12" cy="12" rx="4" ry="10" className="globe-meridian"/>
+                          <line x1="2" y1="12" x2="22" y2="12"/>
+                          <ellipse cx="12" cy="12" rx="10" ry="4"/>
+                          <circle cx="16" cy="7" r="2" fill="#d4af37" stroke="none"/>
+                        </svg>
+                      ) : isPhone ? (
+                        <span className="contact-phone-icon" style={{ display: 'flex' }}>
+                          <IconComponent size={20} />
+                        </span>
                       ) : (
-                        <p style={{
-                          color: '#b8b4a8',
+                        <IconComponent size={20} />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      color: '#8a8780',
+                      fontFamily: 'IBM Plex Mono, monospace',
+                      fontSize: '0.7rem',
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      marginBottom: '0.2rem',
+                    }}>
+                      {info.title}
+                    </div>
+                    {info.link ? (
+                      <a
+                        href={info.link}
+                        style={{
+                          color: '#f5f1e8',
+                          fontFamily: 'Inter, sans-serif',
+                          fontWeight: 500,
+                          fontSize: '0.95rem',
+                          transition: 'color 0.3s ease',
+                          display: 'block',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
-                        }}>{info.value}</p>
-                      )}
-                      <p style={{
-                        color: '#8a8780',
-                        fontSize: '0.75rem',
-                        marginTop: '0.25rem',
-                        fontFamily: 'IBM Plex Mono, monospace',
+                          textDecoration: 'none',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#d4af37'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#f5f1e8'; }}
+                      >
+                        {info.value}
+                      </a>
+                    ) : (
+                      <div style={{
+                        color: '#f5f1e8',
+                        fontFamily: 'Inter, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '0.95rem',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}>
-                        {info.description}
-                      </p>
+                        {info.value}
+                      </div>
+                    )}
+                    <div style={{ color: '#5a5755', fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.72rem', marginTop: '0.2rem' }}>
+                      {info.description}
                     </div>
                   </div>
                 </div>
@@ -521,112 +612,135 @@ const Contact = () => {
               })}
             </div>
 
-            {/* Social Media Links */}
-            <div ref={socialRef} className="contact-dark-card" style={{
-              padding: '1.5rem',
-              background: '#161616',
-              border: '1px solid rgba(212, 175, 55, 0.1)',
-              borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            }}>
-              <h4 style={{
-                color: '#f5f1e8',
-                fontFamily: 'Crimson Pro, serif',
-                fontSize: '1.125rem',
-                marginBottom: '1rem',
-              }}>
-                Connect on Social
-              </h4>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                {socialLinks.map((social, index) => {
-                  const SocialIcon = social.icon;
-                  return (
-                  <a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="social-link"
-                    style={{
-                      width: '3rem',
-                      height: '3rem',
-                      background: 'rgba(212, 175, 55, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#b8b4a8',
-                      transition: 'all 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#d4af37';
-                      e.currentTarget.style.color = '#0d0d0d';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
-                      e.currentTarget.style.color = '#b8b4a8';
-                    }}
-                  >
-                    <SocialIcon size={20} />
-                  </a>
-                );
-                })}
-              </div>
-            </div>
-
             {/* Response Stats */}
             <div ref={statsRef} className="contact-dark-card" style={{
               padding: '1.5rem',
-              background: '#161616',
-              border: '1px solid rgba(212, 175, 55, 0.15)',
-              borderRadius: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              background: 'rgba(255,255,255,0.02)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              borderRadius: '20px',
+              position: 'relative',
+              overflow: 'hidden',
             }}>
+              {/* Top shimmer line */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: '10%',
+                right: '10%',
+                height: '1px',
+                background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.55), transparent)',
+                pointerEvents: 'none',
+              }} />
+              {/* Subtle ambient glow */}
+              <div style={{
+                position: 'absolute',
+                top: '-2rem',
+                right: '-2rem',
+                width: '8rem',
+                height: '8rem',
+                background: 'radial-gradient(circle, rgba(212,175,55,0.07) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }} />
+
               <h4 style={{
                 color: '#f5f1e8',
                 fontFamily: 'Crimson Pro, serif',
                 fontSize: '1.125rem',
-                marginBottom: '1rem',
+                marginBottom: '1.25rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
+                gap: '0.75rem',
+                position: 'relative',
               }}>
-                <div className="animate-pulse-glow" style={{
-                  width: '0.5rem',
-                  height: '0.5rem',
-                  borderRadius: '50%',
-                  background: '#d4af37',
-                }}></div>
+                {/* Pulsing dot with rings */}
+                <div style={{ position: 'relative', width: '0.6rem', height: '0.6rem', flexShrink: 0 }}>
+                  <div className="available-ring" style={{
+                    position: 'absolute',
+                    inset: '-2px',
+                    borderRadius: '50%',
+                    border: '1px solid rgba(74,222,128,0.5)',
+                    pointerEvents: 'none',
+                  }} />
+                  <div className="available-ring" style={{
+                    position: 'absolute',
+                    inset: '-2px',
+                    borderRadius: '50%',
+                    border: '1px solid rgba(74,222,128,0.3)',
+                    pointerEvents: 'none',
+                  }} />
+                  <div style={{
+                    width: '0.6rem',
+                    height: '0.6rem',
+                    borderRadius: '50%',
+                    background: '#4ade80',
+                    boxShadow: '0 0 8px rgba(74,222,128,0.6)',
+                  }} />
+                </div>
                 Currently Available
+                <span style={{
+                  marginLeft: 'auto',
+                  fontFamily: 'IBM Plex Mono, monospace',
+                  fontSize: '0.65rem',
+                  color: '#4ade80',
+                  opacity: 0.7,
+                  letterSpacing: '0.08em',
+                }}>OPEN TO WORK</span>
               </h4>
-              <div style={{
+
+              <div className="contact-stats-grid" style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '1rem',
-                marginBottom: '1rem',
+                gap: '0.75rem',
+                marginBottom: '1.25rem',
               }}>
                 {responseStats.map((stat, index) => {
                   const StatIcon = stat.icon;
                   return (
-                  <div key={index} className="stat-item" style={{ textAlign: 'center' }}>
-                    <StatIcon style={{
-                      margin: '0 auto',
-                      color: '#d4af37',
-                      marginBottom: '0.5rem',
-                    }} size={20} />
+                  <div
+                    key={index}
+                    className="stat-item"
+                    style={{
+                      textAlign: 'center',
+                      padding: '0.875rem 0.5rem',
+                      borderRadius: '12px',
+                      background: 'rgba(255,255,255,0.02)',
+                      border: '1px solid rgba(255,255,255,0.05)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'default',
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget;
+                      el.style.background = 'rgba(212,175,55,0.06)';
+                      el.style.borderColor = 'rgba(212,175,55,0.2)';
+                      el.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget;
+                      el.style.background = 'rgba(255,255,255,0.02)';
+                      el.style.borderColor = 'rgba(255,255,255,0.05)';
+                      el.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <div className="stat-icon" style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
+                      <StatIcon color="#d4af37" size={18} />
+                    </div>
                     <div style={{
                       color: '#f5f1e8',
                       fontFamily: 'Crimson Pro, serif',
                       fontWeight: 700,
-                      fontSize: '1.125rem',
+                      fontSize: '1.1rem',
+                      lineHeight: 1.2,
                     }}>
                       {stat.value}
                     </div>
                     <div style={{
-                      color: '#8a8780',
-                      fontSize: '0.75rem',
+                      color: '#6a6760',
+                      fontSize: '0.68rem',
                       fontFamily: 'IBM Plex Mono, monospace',
-                      marginTop: '0.25rem',
+                      marginTop: '0.3rem',
+                      letterSpacing: '0.05em',
                     }}>
                       {stat.label}
                     </div>
@@ -635,270 +749,210 @@ const Contact = () => {
                 })}
               </div>
               <p style={{
-                color: '#b8b4a8',
-                fontSize: '0.875rem',
+                color: '#8a8780',
+                fontSize: '0.825rem',
                 lineHeight: 1.8,
-                borderTop: '1px solid rgba(212, 175, 55, 0.2)',
+                fontFamily: 'Inter, sans-serif',
+                borderTop: '1px solid rgba(255,255,255,0.05)',
                 paddingTop: '1rem',
+                position: 'relative',
               }}>
-                I&apos;m currently available for freelance projects and full-time opportunities. Let&apos;s build something amazing together!
+                Open to freelance projects &amp; full-time roles.{' '}
+                <span style={{ color: '#d4af37' }}>Let&apos;s build something great.</span>
               </p>
             </div>
 
             {/* Quick Note */}
-            <div className="contact-dark-card" style={{
-              padding: '1rem',
-              background: '#161616',
-              borderLeft: '4px solid #d4af37',
-              borderRadius: '4px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            }}>
+            <div style={{ paddingTop: '0.5rem' }}>
               <p style={{
-                color: '#b8b4a8',
-                fontSize: '0.875rem',
+                color: '#5a5755',
+                fontSize: '0.8rem',
                 fontFamily: 'IBM Plex Mono, monospace',
                 fontStyle: 'italic',
+                lineHeight: 1.8,
               }}>
-                &quot;The best way to predict the future is to create it.&quot; - Let&apos;s create yours together.
+                &ldquo;The best way to predict the future is to create it.&rdquo;<br />
+                <span style={{ color: '#d4af37', opacity: 0.7 }}>— Let&apos;s create yours together.</span>
               </p>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="form-column">
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{
-                fontSize: '1.875rem',
-                fontFamily: 'Crimson Pro, serif',
-                color: '#f5f1e8',
-                marginBottom: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
+          <div className="form-column" style={{
+            background: 'rgba(255,255,255,0.025)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.07)',
+            borderRadius: '20px',
+            padding: '2rem',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+            {/* Form header */}
+            <div style={{ marginBottom: '2.5rem' }}>
+              <div style={{
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: '0.7rem',
+                letterSpacing: '0.18em',
+                color: '#d4af37',
+                textTransform: 'uppercase',
+                marginBottom: '0.75rem',
+                opacity: 0.8,
               }}>
-                <FaPaperPlane style={{ color: '#d4af37' }} />
+                {'// Let\'s talk'}
+              </div>
+              <h3 style={{
+                fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+                fontFamily: 'Crimson Pro, serif',
+                fontWeight: 700,
+                color: '#f5f1e8',
+                lineHeight: 1.2,
+                marginBottom: '1rem',
+              }}>
                 Send Me a Message
               </h3>
               <p style={{
-                color: '#b8b4a8',
+                color: '#8a8780',
                 lineHeight: 1.8,
+                fontSize: '0.9rem',
+                fontFamily: 'Inter, sans-serif',
+                maxWidth: '38rem',
               }}>
-                I&apos;m always interested in hearing about new projects and opportunities.
-                Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you within 24 hours!
+                Have a project in mind or just want to say hi? Drop a message and I&apos;ll get back to you within 24 hours.
               </p>
             </div>
 
-            <form ref={formRef} onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {/* Name Input */}
-              <div className="form-group">
-                <label
-                  htmlFor="name"
-                  style={{
+            <form ref={formRef} onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
+              {/* Name + Email row */}
+              <div className="form-row">
+                {/* Name */}
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="name" style={{
                     display: 'block',
-                    color: '#f5f1e8',
-                    fontFamily: 'Archivo, sans-serif',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    marginBottom: '0.5rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  Your Name *
-                </label>
-                <input
-                  suppressHydrationWarning
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    background: '#161616',
-                    border: errors.name && touched.name ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
-                    borderRadius: '4px',
-                    color: '#f5f1e8',
-                    outline: 'none',
-                    transition: 'all 0.3s ease',
-                    fontFamily: 'Archivo, sans-serif',
-                  }}
-                  placeholder="John Doe"
-                  onFocus={(e) => {
-                    if (!errors.name || !touched.name) {
-                      e.currentTarget.style.borderColor = '#d4af37';
-                    }
-                  }}
-                  onBlur={(e) => {
-                    handleBlur(e);
-                    if (!errors.name || !touched.name) {
-                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
-                    }
-                  }}
-                />
-                {errors.name && touched.name && (
-                  <p style={{
-                    marginTop: '0.5rem',
-                    color: '#f87171',
-                    fontSize: '0.875rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
+                    color: '#8a8780',
                     fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.7rem',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    marginBottom: '0.5rem',
                   }}>
-                    <FaExclamationCircle size={14} />
-                    {errors.name}
-                  </p>
-                )}
+                    Name *
+                  </label>
+                  <div className="input-wrapper">
+                    <span className="input-icon"><FaUser size={13} /></span>
+                    <input
+                      suppressHydrationWarning
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="input-with-icon"
+                      style={{
+                        width: '100%',
+                        border: errors.name && touched.name ? '1px solid rgba(239,68,68,0.6)' : undefined,
+                      }}
+                      placeholder="Your full name"
+                      onBlur={handleBlur}
+                    />
+                  </div>
+                  {errors.name && touched.name && (
+                    <p style={{ marginTop: '0.4rem', color: '#f87171', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontFamily: 'IBM Plex Mono, monospace' }}>
+                      <FaExclamationCircle size={12} />{errors.name}
+                    </p>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label htmlFor="email" style={{
+                    display: 'block',
+                    color: '#8a8780',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.7rem',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    marginBottom: '0.5rem',
+                  }}>
+                    Email *
+                  </label>
+                  <div className="input-wrapper">
+                    <span className="input-icon"><FaEnvelope size={13} /></span>
+                    <input
+                      suppressHydrationWarning
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="input-with-icon"
+                      style={{
+                        width: '100%',
+                        border: errors.email && touched.email ? '1px solid rgba(239,68,68,0.6)' : undefined,
+                      }}
+                      placeholder="your@email.com"
+                      onBlur={handleBlur}
+                    />
+                  </div>
+                  {errors.email && touched.email && (
+                    <p style={{ marginTop: '0.4rem', color: '#f87171', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontFamily: 'IBM Plex Mono, monospace' }}>
+                      <FaExclamationCircle size={12} />{errors.email}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* Email Input */}
+              {/* Message */}
               <div className="form-group">
-                <label
-                  htmlFor="email"
-                  style={{
-                    display: 'block',
-                    color: '#f5f1e8',
-                    fontFamily: 'Archivo, sans-serif',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    marginBottom: '0.5rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                  }}
-                >
-                  Your Email *
-                </label>
-                <input
-                  suppressHydrationWarning
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    background: '#161616',
-                    border: errors.email && touched.email ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
-                    borderRadius: '4px',
-                    color: '#f5f1e8',
-                    outline: 'none',
-                    transition: 'all 0.3s ease',
-                    fontFamily: 'Archivo, sans-serif',
-                  }}
-                  placeholder="john@example.com"
-                  onFocus={(e) => {
-                    if (!errors.email || !touched.email) {
-                      e.currentTarget.style.borderColor = '#d4af37';
-                    }
-                  }}
-                  onBlur={(e) => {
-                    handleBlur(e);
-                    if (!errors.email || !touched.email) {
-                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
-                    }
-                  }}
-                />
-                {errors.email && touched.email && (
-                  <p style={{
-                    marginTop: '0.5rem',
-                    color: '#f87171',
-                    fontSize: '0.875rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <label htmlFor="message" style={{
+                    color: '#8a8780',
                     fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: '0.7rem',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
                   }}>
-                    <FaExclamationCircle size={14} />
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-
-              {/* Message Textarea */}
-              <div className="form-group">
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '0.5rem',
-                }}>
-                  <label
-                    htmlFor="message"
-                    style={{
-                      display: 'block',
-                      color: '#f5f1e8',
-                      fontFamily: 'Archivo, sans-serif',
-                      fontWeight: 600,
-                      fontSize: '0.875rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                    }}
-                  >
-                    Your Message *
+                    Message *
                   </label>
                   <span style={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.7rem',
                     fontFamily: 'IBM Plex Mono, monospace',
-                    color: charCount > maxCharCount ? '#f87171' : '#8a8780',
+                    color: charCount > maxCharCount ? '#f87171' : '#5a5755',
                   }}>
                     {charCount}/{maxCharCount}
                   </span>
                 </div>
-                <textarea
-                  suppressHydrationWarning
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={6}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    background: '#161616',
-                    border: errors.message && touched.message ? '1px solid #ef4444' : '1px solid rgba(212, 175, 55, 0.2)',
-                    borderRadius: '4px',
-                    color: '#f5f1e8',
-                    outline: 'none',
-                    transition: 'all 0.3s ease',
-                    resize: 'none',
-                    fontFamily: 'Archivo, sans-serif',
-                  }}
-                  placeholder="Hello! I'd like to discuss..."
-                  onFocus={(e) => {
-                    if (!errors.message || !touched.message) {
-                      e.currentTarget.style.borderColor = '#d4af37';
-                    }
-                  }}
-                  onBlur={(e) => {
-                    handleBlur(e);
-                    if (!errors.message || !touched.message) {
-                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
-                    }
-                  }}
-                />
+                <div className="input-wrapper textarea-wrapper">
+                  <span className="input-icon textarea-icon"><FaCommentAlt size={13} /></span>
+                  <textarea
+                    suppressHydrationWarning
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={6}
+                    className="input-with-icon"
+                    style={{
+                      width: '100%',
+                      resize: 'none',
+                      border: errors.message && touched.message ? '1px solid rgba(239,68,68,0.6)' : undefined,
+                    }}
+                    placeholder="Hello! I'd like to discuss a project..."
+                    onBlur={handleBlur}
+                  />
+                </div>
                 {errors.message && touched.message && (
-                  <p style={{
-                    marginTop: '0.5rem',
-                    color: '#f87171',
-                    fontSize: '0.875rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                  }}>
-                    <FaExclamationCircle size={14} />
-                    {errors.message}
+                  <p style={{ marginTop: '0.4rem', color: '#f87171', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontFamily: 'IBM Plex Mono, monospace' }}>
+                    <FaExclamationCircle size={12} />{errors.message}
                   </p>
                 )}
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 suppressHydrationWarning
                 type="submit"
@@ -906,56 +960,47 @@ const Contact = () => {
                 className="btn btn-primary"
                 style={{
                   width: '100%',
-                  padding: '1rem 2rem',
-                  opacity: isSubmitting ? 0.5 : 1,
-                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                  overflow: 'hidden',
-                  textTransform: 'uppercase',
+                  justifyContent: 'center',
+                  fontSize: '0.875rem',
                   letterSpacing: '0.1em',
+                  opacity: isSubmitting ? 0.7 : 1,
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 }}
               >
-                <span style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.75rem',
-                }}>
-                  {isSubmitting ? (
-                    <>
-                      <span className="animate-spin">⏳</span>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <FaPaperPlane />
-                      Send Message
-                    </>
-                  )}
-                </span>
+                {isSubmitting ? (
+                  <>
+                    <span className="form-spinner" />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    <FaPaperPlane size={14} />
+                    Send Message
+                  </>
+                )}
               </button>
 
-              {/* Status Messages */}
+              {/* Status */}
               {submitMessage && (
                 <div
                   className="animate-fade-in"
                   style={{
-                    padding: '1rem',
-                    border: `1px solid ${submitStatus === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                    borderRadius: '4px',
-                    fontFamily: 'Archivo, sans-serif',
+                    padding: '1rem 1.25rem',
+                    borderRadius: '12px',
+                    border: `1px solid ${submitStatus === 'success' ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}`,
+                    background: submitStatus === 'success' ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.06)',
+                    backdropFilter: 'blur(8px)',
                     fontSize: '0.875rem',
+                    fontFamily: 'Inter, sans-serif',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '0.75rem',
-                    background: submitStatus === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
                     color: submitStatus === 'success' ? '#4ade80' : '#f87171',
                   }}
                 >
-                  {submitStatus === 'success' ? (
-                    <FaCheckCircle style={{ marginTop: '0.125rem', flexShrink: 0 }} size={18} />
-                  ) : (
-                    <FaExclamationCircle style={{ marginTop: '0.125rem', flexShrink: 0 }} size={18} />
-                  )}
+                  {submitStatus === 'success'
+                    ? <FaCheckCircle style={{ flexShrink: 0, marginTop: '0.1rem' }} size={16} />
+                    : <FaExclamationCircle style={{ flexShrink: 0, marginTop: '0.1rem' }} size={16} />}
                   <span>{submitMessage}</span>
                 </div>
               )}
@@ -963,6 +1008,76 @@ const Contact = () => {
           </div>
 
         </div>
+
+        {/* Divider */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.06) 70%, transparent)',
+          margin: '3rem 0 2.5rem',
+        }} />
+
+        {/* Connect on Social — full-width centered below both columns */}
+        <div ref={socialRef} style={{ textAlign: 'center' }}>
+          <div style={{
+            fontFamily: 'IBM Plex Mono, monospace',
+            color: '#5a5755',
+            fontSize: '0.68rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            marginBottom: '1.5rem',
+          }}>
+            Connect on Social
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem' }}>
+            {socialLinks.map((social, index) => {
+              const SocialIcon = social.icon;
+              return (
+                <a
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="social-link"
+                  style={{
+                    width: '3.25rem',
+                    height: '3.25rem',
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#6a6760',
+                    textDecoration: 'none',
+                    transition: 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    flexShrink: 0,
+                    position: 'relative',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget;
+                    el.style.background = `${social.brand}1a`;
+                    el.style.borderColor = `${social.brand}55`;
+                    el.style.color = social.brand;
+                    el.style.transform = 'translateY(-6px) scale(1.18)';
+                    el.style.boxShadow = `0 12px 30px ${social.brand}30`;
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget;
+                    el.style.background = 'rgba(255,255,255,0.03)';
+                    el.style.borderColor = 'rgba(255,255,255,0.08)';
+                    el.style.color = '#6a6760';
+                    el.style.transform = 'translateY(0) scale(1)';
+                    el.style.boxShadow = '';
+                  }}
+                >
+                  <SocialIcon size={18} />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
@@ -979,6 +1094,124 @@ const Contact = () => {
           .contact-subtitle {
             margin-left: 4rem;
           }
+        }
+        @media (max-width: 640px) {
+          .contact-grid {
+            gap: 2rem;
+          }
+          .contact-dark-card {
+            padding: 1.25rem !important;
+          }
+          .stat-item {
+            padding: 0 0.25rem;
+          }
+        }
+        @media (max-width: 380px) {
+          .contact-stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+
+        /* Globe meridian rotation */
+        @keyframes globe-spin {
+          0%   { transform: scaleX(1); }
+          50%  { transform: scaleX(0.1); }
+          100% { transform: scaleX(1); }
+        }
+        .globe-meridian {
+          transform-origin: center center;
+          animation: globe-spin 3s ease-in-out infinite;
+        }
+
+        /* Social icon circles */
+        .social-link {
+          will-change: transform;
+        }
+
+        /* Available dot rings (GSAP animates these) */
+        .available-ring {
+          will-change: transform, opacity;
+        }
+
+        /* Stat icon (GSAP pulses) */
+        .stat-icon {
+          will-change: transform;
+        }
+
+        /* Input icon */
+        .input-wrapper {
+          position: relative;
+        }
+        .input-icon {
+          position: absolute;
+          left: 0.9rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #5a5755;
+          transition: color 0.3s ease, transform 0.3s ease;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          z-index: 1;
+        }
+        .textarea-icon {
+          top: 1rem;
+          transform: none;
+        }
+        .input-wrapper:focus-within .input-icon {
+          color: #d4af37;
+          transform: translateY(-50%) scale(1.15);
+        }
+        .textarea-wrapper:focus-within .input-icon {
+          color: #d4af37;
+          transform: scale(1.15);
+        }
+        .input-with-icon {
+          padding-left: 2.6rem !important;
+        }
+
+        /* Form column */
+        .form-column {
+          display: flex;
+          flex-direction: column;
+        }
+        /* Shimmer line at top of both glass cards */
+        .info-column::before,
+        .form-column::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 10%;
+          right: 10%;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent);
+          pointer-events: none;
+        }
+
+        /* Form row — side-by-side Name + Email */
+        .form-row {
+          display: flex;
+          gap: 1rem;
+        }
+        @media (max-width: 600px) {
+          .form-row {
+            flex-direction: column;
+          }
+        }
+
+        /* Submit spinner */
+        @keyframes form-spin {
+          to { transform: rotate(360deg); }
+        }
+        .form-spinner {
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: #fff;
+          border-radius: 50%;
+          animation: form-spin 0.7s linear infinite;
+          flex-shrink: 0;
         }
       `}} />
     </section>

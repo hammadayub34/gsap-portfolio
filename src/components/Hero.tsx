@@ -12,6 +12,8 @@ const Hero = () => {
   const descRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
+  const btn1Ref = useRef<HTMLSpanElement>(null);
+  const btn2Ref = useRef<HTMLSpanElement>(null);
   
   const [typedText, setTypedText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
@@ -154,6 +156,20 @@ const Hero = () => {
     document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const makeMagnetic = (ref: React.RefObject<HTMLSpanElement | null>) => ({
+    onMouseMove: (e: React.MouseEvent<HTMLSpanElement>) => {
+      const el = ref.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const dx = e.clientX - (rect.left + rect.width / 2);
+      const dy = e.clientY - (rect.top + rect.height / 2);
+      gsap.to(el, { x: dx * 0.28, y: dy * 0.28, duration: 0.35, ease: 'power2.out' });
+    },
+    onMouseLeave: () => {
+      gsap.to(ref.current, { x: 0, y: 0, duration: 0.55, ease: 'elastic.out(1, 0.4)' });
+    },
+  });
+
   return (
     <section
       id="home"
@@ -288,6 +304,7 @@ const Hero = () => {
           <div className="parallax-layer-1" style={{ marginBottom: '2rem' }}>
             <h2
               ref={subtitleRef}
+              className="hero-subtitle"
               style={{
                 fontFamily: 'Crimson Pro, serif',
                 fontWeight: 600,
@@ -311,7 +328,7 @@ const Hero = () => {
           </div>
 
           {/* Description */}
-          <div className="parallax-layer-2" style={{ marginBottom: '3rem' }}>
+          <div className="parallax-layer-2 hero-desc" style={{ marginBottom: '3rem' }}>
             <p
               ref={descRef}
               style={{
@@ -332,6 +349,7 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div
             ref={ctaRef}
+            className="hero-cta"
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -343,43 +361,41 @@ const Hero = () => {
               opacity: 0,
             }}
           >
-            <Link
-              href="#projects"
-              className="btn btn-outline"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                minWidth: '11rem',
-              }}
-            >
-              <span>View My Work</span>
-              <span style={{
-                display: 'inline-block',
-                transition: 'transform 0.3s ease',
-              }}>→</span>
-            </Link>
-            <Link
-              href="#contact"
-              className="btn btn-primary"
-              style={{
-                minWidth: '11rem',
-                justifyContent: 'center',
-              }}
-            >
-              Get In Touch
-            </Link>
+            <span ref={btn1Ref} style={{ display: 'inline-block' }} {...makeMagnetic(btn1Ref)}>
+              <Link
+                href="#projects"
+                className="btn btn-outline hero-cta-btn"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  minWidth: '11rem',
+                }}
+              >
+                <span>View My Work</span>
+                <span style={{ display: 'inline-block', transition: 'transform 0.3s ease' }}>→</span>
+              </Link>
+            </span>
+            <span ref={btn2Ref} style={{ display: 'inline-block' }} {...makeMagnetic(btn2Ref)}>
+              <Link
+                href="#contact"
+                className="btn btn-primary hero-cta-btn"
+                style={{ minWidth: '11rem', justifyContent: 'center' }}
+              >
+                Get In Touch
+              </Link>
+            </span>
           </div>
-
 
         </div>
       </div>
 
-      {/* Scroll indicator — outside container so it anchors to section bottom */}
+      {/* Scroll indicator — hidden on mobile, anchors to section bottom on desktop */}
       <button
         onClick={scrollToProjects}
         suppressHydrationWarning
+        className="hero-scroll-btn"
         style={{
           position: 'absolute',
           bottom: '2.5rem',
@@ -471,7 +487,57 @@ const Hero = () => {
         .btn:hover span:last-child {
           transform: translateX(4px);
         }
-      `}} />
+
+        /* Hero mobile responsiveness */
+
+        /* Hide scroll arrow on mobile — prevents overlap with CTA buttons */
+        @media (max-width: 767px) {
+          .hero-scroll-btn {
+            display: none !important;
+          }
+          #home {
+            padding-top: 5rem !important;
+            padding-bottom: 3rem !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .hero-desc {
+            margin-bottom: 1.5rem !important;
+          }
+          .hero-subtitle {
+            font-size: clamp(0.9rem, 5.5vw, 1.4rem) !important;
+            min-height: 2rem !important;
+            margin-bottom: 1rem !important;
+          }
+          .hero-cta {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding-top: 1rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+          }
+          .hero-cta-btn {
+            width: 100% !important;
+            min-width: unset !important;
+            justify-content: center !important;
+            padding: 0.875rem 1.5rem !important;
+          }
+          #home {
+            padding-bottom: 2.5rem !important;
+          }
+        }
+
+        @media (max-width: 400px) {
+          #home h1 {
+            font-size: clamp(1.5rem, 10vw, 2.5rem) !important;
+          }
+          .hero-subtitle {
+            font-size: clamp(0.8rem, 4.5vw, 1.1rem) !important;
+          }
+        }
+
+`}} />
     </section>
   );
 };

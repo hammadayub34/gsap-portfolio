@@ -4,9 +4,27 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaAws, FaBrain, FaCode } from 'react-icons/fa';
+import { SiNodedotjs, SiMongodb, SiPython, SiFastapi, SiFlutter, SiDart, SiFirebase } from 'react-icons/si';
+import { HiChip } from 'react-icons/hi';
 import ProjectCard from './ProjectCard';
 import { Project } from '@/types';
+
+type TechEntry = { icon: React.ElementType; color: string; label: string };
+const techMap: Record<string, TechEntry> = {
+  'Node.js':   { icon: SiNodedotjs, color: '#6cc24a', label: 'Node.js' },
+  'Fastify':   { icon: FaCode,      color: '#d4af37', label: 'Fastify' },
+  'MongoDB':   { icon: SiMongodb,   color: '#47a248', label: 'MongoDB' },
+  'REST APIs': { icon: FaCode,      color: '#d4af37', label: 'REST APIs' },
+  'IoT':       { icon: HiChip,      color: '#e0bc45', label: 'IoT' },
+  'AWS':       { icon: FaAws,       color: '#ff9900', label: 'AWS' },
+  'Python':    { icon: SiPython,    color: '#3776ab', label: 'Python' },
+  'FastAPI':   { icon: SiFastapi,   color: '#05998b', label: 'FastAPI' },
+  'AI/ML':     { icon: FaBrain,     color: '#a855f7', label: 'AI/ML' },
+  'Flutter':   { icon: SiFlutter,   color: '#54c5f8', label: 'Flutter' },
+  'Dart':      { icon: SiDart,      color: '#0175c2', label: 'Dart' },
+  'Firebase':  { icon: SiFirebase,  color: '#f5820d', label: 'Firebase' },
+};
 
 const Projects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -99,20 +117,23 @@ const Projects = () => {
         {/* Section Title */}
         <h2
           ref={titleRef}
+          className="section-title-mb"
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
             display: 'flex',
             alignItems: 'center',
-            fontSize: 'clamp(1.4rem, 5vw, 3rem)',
+            fontSize: 'clamp(1.4rem, 5vw, 2.5rem)',
             fontFamily: 'Crimson Pro, serif',
             fontWeight: 700,
+            letterSpacing: '-0.02em',
             whiteSpace: 'nowrap',
             flexWrap: 'nowrap',
+            overflow: 'hidden',
           }}
         >
           <span style={{ fontFamily: 'IBM Plex Mono, monospace', color: '#d4af37', fontSize: '1.5rem', marginRight: '1rem', flexShrink: 0 }}>
-            04.
+            03.
           </span>
           Featured Projects
           <span style={{ marginLeft: '2rem', height: '1px', background: 'rgba(184, 180, 168, 0.3)', flex: 1, maxWidth: '20rem' }} />
@@ -124,23 +145,23 @@ const Projects = () => {
           className="featured-project"
           style={{
             display: 'grid',
-            background: '#161616',
-            border: '1px solid rgba(212, 175, 55, 0.15)',
-            borderTop: '3px solid #d4af37',
-            borderRadius: '8px',
+            background: 'rgba(255,255,255,0.025)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '20px',
             overflow: 'hidden',
             marginBottom: '2rem',
             transition: 'border-color 0.3s ease, box-shadow 0.4s ease',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+            boxShadow: '0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.4)';
+            e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+            e.currentTarget.style.boxShadow = '0 16px 60px rgba(0,0,0,0.6), 0 0 60px rgba(212,175,55,0.08), inset 0 1px 0 rgba(255,255,255,0.08)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.borderTopColor = '#d4af37';
-            e.currentTarget.style.borderRightColor = 'rgba(212, 175, 55, 0.15)';
-            e.currentTarget.style.borderBottomColor = 'rgba(212, 175, 55, 0.15)';
-            e.currentTarget.style.borderLeftColor = 'rgba(212, 175, 55, 0.15)';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+            e.currentTarget.style.boxShadow = '0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)';
           }}
         >
           {/* Image */}
@@ -197,35 +218,69 @@ const Projects = () => {
 
             <div className="project-desc-panel" style={{
               padding: '1.25rem',
-              border: '1px solid rgba(212, 175, 55, 0.08)',
-              borderRadius: '4px',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: '10px',
             }}>
               <p style={{
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 400,
                 color: '#b8b4a8',
-                lineHeight: 1.8,
-                fontSize: '0.95rem',
-                textAlign: 'justify',
+                lineHeight: 1.65,
+                fontSize: '0.9rem',
+                letterSpacing: '-0.01em',
               }}>
                 {featured.description}
               </p>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {featured.technologies.map((tech, i) => (
-                <span
-                  key={i}
-                  style={{
-                    padding: '0.25rem 0.75rem',
-                    background: 'rgba(212, 175, 55, 0.08)',
-                    color: '#d4af37',
-                    fontSize: '0.75rem',
-                    fontFamily: 'IBM Plex Mono, monospace',
-                    border: '1px solid rgba(212, 175, 55, 0.2)',
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', alignItems: 'center' }}>
+              {featured.technologies.map((tech, i) => {
+                const entry = techMap[tech];
+                if (!entry) return (
+                  <span key={i} style={{ fontSize: '0.65rem', fontFamily: 'IBM Plex Mono, monospace', color: '#5a5755', border: '1px solid rgba(255,255,255,0.06)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>{tech}</span>
+                );
+                const IconComp = entry.icon;
+                return (
+                  <div
+                    key={i}
+                    className="feat-tech-orb"
+                    title={entry.label}
+                    style={{
+                      width: '2.25rem', height: '2.25rem', borderRadius: '50%',
+                      background: `${entry.color}14`, border: `1px solid ${entry.color}2e`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: entry.color, position: 'relative', flexShrink: 0,
+                      transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)', cursor: 'default',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = `${entry.color}28`;
+                      e.currentTarget.style.borderColor = `${entry.color}66`;
+                      e.currentTarget.style.transform = 'translateY(-3px) scale(1.18)';
+                      e.currentTarget.style.boxShadow = `0 6px 18px ${entry.color}28`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = `${entry.color}14`;
+                      e.currentTarget.style.borderColor = `${entry.color}2e`;
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                      e.currentTarget.style.boxShadow = '';
+                    }}
+                  >
+                    <IconComp size={14} />
+                    <span style={{
+                      position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%',
+                      transform: 'translateX(-50%)',
+                      background: 'rgba(8,8,8,0.95)', color: '#f5f1e8',
+                      fontSize: '0.6rem', fontFamily: 'IBM Plex Mono, monospace',
+                      padding: '0.22rem 0.55rem', borderRadius: '6px', whiteSpace: 'nowrap',
+                      border: '1px solid rgba(255,255,255,0.08)', opacity: 0,
+                      transition: 'opacity 0.2s ease', pointerEvents: 'none', zIndex: 20,
+                    }} className="feat-tech-tooltip">
+                      {entry.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
 
             <a
@@ -290,6 +345,20 @@ const Projects = () => {
           .projects-grid {
             grid-template-columns: repeat(2, 1fr);
           }
+        }
+        @media (max-width: 640px) {
+          .featured-content {
+            padding: 1.25rem !important;
+          }
+          .featured-content h3 {
+            font-size: 1.5rem !important;
+          }
+          .projects-grid {
+            gap: 1.25rem;
+          }
+        }
+        .feat-tech-orb:hover .feat-tech-tooltip {
+          opacity: 1 !important;
         }
       `}} />
     </section>
