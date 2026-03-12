@@ -46,14 +46,13 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
     gsap.registerPlugin(ScrollTrigger);
 
     if (cardRef.current) {
-      gsap.from(cardRef.current, {
-        opacity: 0,
-        y: 60,
-        scale: 0.96,
+      gsap.to(cardRef.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
         duration: 1,
         delay: index * 0.15,
         ease: 'power4.out',
-        immediateRender: false,
         scrollTrigger: {
           trigger: cardRef.current,
           start: 'top 88%',
@@ -101,7 +100,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   return (
     <div
       ref={cardRef}
-      className="project-card-root"
+      className="project-card-root gsap-card"
       style={{
         position: 'relative',
         background: 'rgba(255,255,255,0.025)',

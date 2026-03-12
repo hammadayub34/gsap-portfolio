@@ -57,27 +57,24 @@ const Hero = () => {
   // Main animations
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Pre-set initial states immediately to avoid post-paint flash
+      gsap.set([subtitleRef.current, descRef.current, ctaRef.current], {
+        opacity: 0,
+        y: 40,
+      });
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Stagger fade-in for main content — title handled by AnimatedText
-      tl.from(
-          subtitleRef.current,
-          {
-            y: 100,
-            opacity: 0,
-            duration: 1.2,
-            ease: 'power4.out',
-            delay: 0.9,
-          }
-        )
-        .from(
+      tl.to(subtitleRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: 'power4.out',
+          delay: 0.9,
+        })
+        .to(
           descRef.current,
-          {
-            y: 40,
-            opacity: 0,
-            duration: 1,
-            ease: 'power4.out',
-          },
+          { y: 0, opacity: 1, duration: 1, ease: 'power4.out' },
           '-=0.5'
         )
         .fromTo(
@@ -188,8 +185,8 @@ const Hero = () => {
       {/* Animated background elements */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         {/* Gradient blobs */}
-        <div 
-          className="gradient-blob-1" 
+        <div
+          className="gradient-blob-1"
           style={{
             position: 'absolute',
             top: '25%',
@@ -199,10 +196,12 @@ const Hero = () => {
             background: 'rgba(212, 175, 55, 0.1)',
             borderRadius: '50%',
             filter: 'blur(80px)',
+            willChange: 'transform',
+            transform: 'translateZ(0)',
           }}
         ></div>
-        <div 
-          className="gradient-blob-2" 
+        <div
+          className="gradient-blob-2"
           style={{
             position: 'absolute',
             bottom: '25%',
@@ -212,6 +211,8 @@ const Hero = () => {
             background: 'rgba(212, 175, 55, 0.1)',
             borderRadius: '50%',
             filter: 'blur(80px)',
+            willChange: 'transform',
+            transform: 'translateZ(0)',
           }}
         ></div>
         

@@ -16,40 +16,28 @@ const About = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 60,
+      gsap.to(titleRef.current, {
+        opacity: 1,
+        y: 0,
         duration: 1.2,
         ease: 'power4.out',
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-        },
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
       });
 
-      gsap.from(contentRef.current, {
-        opacity: 0,
-        x: -60,
+      gsap.to(contentRef.current, {
+        opacity: 1,
+        x: 0,
         duration: 1.1,
         ease: 'power4.out',
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: contentRef.current,
-          start: 'top 80%',
-        },
+        scrollTrigger: { trigger: contentRef.current, start: 'top 80%' },
       });
 
-      gsap.from(imageRef.current, {
-        opacity: 0,
-        x: 60,
+      gsap.to(imageRef.current, {
+        opacity: 1,
+        x: 0,
         duration: 1.1,
         ease: 'power4.out',
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: imageRef.current,
-          start: 'top 80%',
-        },
+        scrollTrigger: { trigger: imageRef.current, start: 'top 80%' },
       });
 
       // Image float
@@ -121,7 +109,7 @@ const About = () => {
         {/* Section Title */}
         <h2
           ref={titleRef}
-          className="section-title-mb"
+          className="section-title-mb gsap-title"
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
@@ -161,7 +149,7 @@ const About = () => {
           alignItems: 'center',
         }}>
           {/* Content */}
-          <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div ref={contentRef} className="gsap-fade-left" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <p style={{
               fontFamily: 'Inter, sans-serif',
               fontWeight: 400,
@@ -206,7 +194,7 @@ const About = () => {
           </div>
 
           {/* Profile Image */}
-          <div ref={imageRef} className="about-image-outer" style={{ position: 'relative' }}>
+          <div ref={imageRef} className="about-image-outer gsap-fade-right" style={{ position: 'relative' }}>
             <div style={{
               position: 'relative',
               width: '100%',

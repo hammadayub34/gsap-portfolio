@@ -58,36 +58,33 @@ const Testimonials = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 50,
+      gsap.to(titleRef.current, {
+        opacity: 1,
+        y: 0,
         duration: 1,
         ease: 'power3.out',
-        immediateRender: false,
         scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
       });
 
-      // Cards scale + fade in
-      gsap.from('.t-card', {
-        opacity: 0,
-        scale: 0.92,
-        y: 50,
+      // Cards — CSS sets opacity:0 via .t-card
+      gsap.to('.t-card', {
+        opacity: 1,
+        scale: 1,
+        y: 0,
         duration: 0.9,
         stagger: 0.15,
         ease: 'power4.out',
-        immediateRender: false,
         scrollTrigger: { trigger: '.t-grid', start: 'top 85%' },
       });
 
-      // Stars bounce in per card (delayed after card entrance)
+      // Stars — CSS sets opacity:0 and scale:0 via .t-star
       gsap.utils.toArray<HTMLElement>('.t-star').forEach((star, i) => {
-        gsap.from(star, {
-          scale: 0,
-          opacity: 0,
+        gsap.to(star, {
+          scale: 1,
+          opacity: 1,
           duration: 0.35,
           delay: 0.6 + (i % 5) * 0.06,
           ease: 'back.out(2)',
-          immediateRender: false,
           scrollTrigger: { trigger: '.t-grid', start: 'top 85%' },
         });
       });
@@ -132,7 +129,7 @@ const Testimonials = () => {
       <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
 
         {/* Section title */}
-        <h2 ref={titleRef} style={{
+        <h2 ref={titleRef} className="gsap-title" style={{
           color: '#f5f1e8',
           marginBottom: '3.5rem',
           display: 'flex',

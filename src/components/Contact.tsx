@@ -47,58 +47,46 @@ const Contact = () => {
     
     const ctx = gsap.context(() => {
       // Title
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 50,
+      gsap.to(titleRef.current, {
+        opacity: 1,
+        y: 0,
         duration: 1,
         ease: 'power3.out',
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: titleRef.current,
-          start: 'top 85%',
-        },
+        scrollTrigger: { trigger: titleRef.current, start: 'top 85%' },
       });
 
-      // Form groups
+      // Form groups — CSS sets opacity:0 via .form-group
       const formGroups = formRef.current?.querySelectorAll('.form-group');
       if (formGroups && formGroups.length > 0) {
-        gsap.from(formGroups, {
-          opacity: 0,
-          y: 30,
+        gsap.to(formGroups, {
+          opacity: 1,
+          y: 0,
           duration: 0.8,
           stagger: 0.1,
           ease: 'power2.out',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: 'top 85%',
-          },
+          scrollTrigger: { trigger: formRef.current, start: 'top 85%' },
         });
       }
 
-      // Info cards — own trigger so they always animate when visible
+      // Info cards — CSS sets opacity:0 via .info-card
       const infoCards = infoRef.current?.querySelectorAll('.info-card');
       if (infoCards && infoCards.length > 0) {
-        gsap.from(infoCards, {
-          opacity: 0,
-          x: 50,
+        gsap.to(infoCards, {
+          opacity: 1,
+          x: 0,
           duration: 0.8,
           stagger: 0.15,
           ease: 'power2.out',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: infoRef.current,
-            start: 'top 85%',
-          },
+          scrollTrigger: { trigger: infoRef.current, start: 'top 85%' },
         });
       }
 
-      // Social links — entrance + continuous float
+      // Social links — CSS sets opacity:0 via .social-link
       const socialIconEls = socialRef.current?.querySelectorAll('.social-link');
       if (socialIconEls && socialIconEls.length > 0) {
-        gsap.from(socialIconEls, {
-          opacity: 0,
-          scale: 0,
+        gsap.to(socialIconEls, {
+          opacity: 1,
+          scale: 1,
           duration: 0.6,
           stagger: 0.12,
           ease: 'back.out(1.7)',
@@ -409,7 +397,7 @@ const Contact = () => {
 
       <div className="container-custom" style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', width: '100%' }}>
         {/* Section Title */}
-        <div ref={titleRef} className="section-title-mb" style={{ marginBottom: '4rem' }}>
+        <div ref={titleRef} className="section-title-mb gsap-title" style={{ marginBottom: '4rem' }}>
           <h2 style={{
             color: '#f5f1e8',
             display: 'flex',
@@ -464,7 +452,7 @@ const Contact = () => {
           <div ref={infoRef} className="info-column" style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '1.5rem',
+            gap: '6.5rem',
             background: 'rgba(255,255,255,0.025)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',

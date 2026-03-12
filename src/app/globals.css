@@ -259,12 +259,13 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.04;
+  opacity: 0.025;
   z-index: 0;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   animation: grain 12s steps(8) infinite;
-  mix-blend-mode: overlay;
+  will-change: transform;
+  /* Removed mix-blend-mode: overlay — it composites on every GSAP frame causing black flashes */
 }
 
 body::after {
@@ -277,6 +278,62 @@ body::after {
   pointer-events: none;
   background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
   z-index: 1;
+}
+
+/* ============================================
+   GSAP ANTI-GLITCH
+   Set initial invisible state via CSS so elements
+   are hidden BEFORE JavaScript loads — eliminates
+   the black flash when scroll triggers fire.
+   GSAP uses gsap.to() to reveal them on scroll.
+   ============================================ */
+
+/* Scroll-animated section titles */
+.gsap-title {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+/* Scroll-animated cards & content blocks */
+.blog-featured,
+.blog-side-0,
+.blog-side-1,
+.t-card,
+.form-group,
+.info-card,
+.social-link,
+.gsap-card,
+.gsap-fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.gsap-fade-left  { opacity: 0; transform: translateX(-55px); }
+.gsap-fade-right { opacity: 0; transform: translateX(55px); }
+
+/* Testimonial stars start invisible (scale + opacity) */
+.t-star { opacity: 0; transform: scale(0); }
+
+/* T-card starts at scale 0.92 to match the old gsap.from scale */
+.t-card { transform: translateY(40px) scale(0.92); }
+
+/* GPU pre-promotion for blurred/animated elements */
+.gradient-blob-1,
+.gradient-blob-2 {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+section {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.particle {
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* ============================================

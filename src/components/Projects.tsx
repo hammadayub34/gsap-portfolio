@@ -35,21 +35,19 @@ const Projects = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 50,
+      gsap.to(titleRef.current, {
+        opacity: 1,
+        y: 0,
         duration: 1,
         ease: 'power3.out',
-        immediateRender: false,
         scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
       });
 
-      gsap.from(featuredRef.current, {
-        opacity: 0,
-        y: 60,
+      gsap.to(featuredRef.current, {
+        opacity: 1,
+        y: 0,
         duration: 1.1,
         ease: 'power4.out',
-        immediateRender: false,
         scrollTrigger: { trigger: featuredRef.current, start: 'top 85%' },
       });
     }, sectionRef);
@@ -117,7 +115,7 @@ const Projects = () => {
         {/* Section Title */}
         <h2
           ref={titleRef}
-          className="section-title-mb"
+          className="section-title-mb gsap-title"
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
@@ -142,7 +140,7 @@ const Projects = () => {
         {/* Featured Hero Project */}
         <div
           ref={featuredRef}
-          className="featured-project"
+          className="featured-project gsap-fade-up"
           style={{
             display: 'grid',
             background: 'rgba(255,255,255,0.025)',

@@ -59,26 +59,22 @@ const Blogs = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        opacity: 0, y: 50, duration: 1, ease: 'power3.out',
-        immediateRender: false,
+      gsap.to(titleRef.current, {
+        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
         scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
       });
 
-      gsap.from('.blog-featured', {
-        opacity: 0, y: 70, duration: 1.1, ease: 'power4.out',
-        immediateRender: false,
+      gsap.to('.blog-featured', {
+        opacity: 1, y: 0, duration: 1.1, ease: 'power4.out',
         scrollTrigger: { trigger: '.blog-featured', start: 'top 88%' },
       });
 
-      gsap.from('.blog-side-0', {
-        opacity: 0, x: -55, duration: 0.95, ease: 'power4.out',
-        immediateRender: false,
+      gsap.to('.blog-side-0', {
+        opacity: 1, x: 0, duration: 0.95, ease: 'power4.out',
         scrollTrigger: { trigger: '.blog-side-row', start: 'top 88%' },
       });
-      gsap.from('.blog-side-1', {
-        opacity: 0, x: 55, duration: 0.95, ease: 'power4.out',
-        immediateRender: false,
+      gsap.to('.blog-side-1', {
+        opacity: 1, x: 0, duration: 0.95, ease: 'power4.out',
         scrollTrigger: { trigger: '.blog-side-row', start: 'top 88%' },
       });
 
@@ -114,7 +110,7 @@ const Blogs = () => {
       <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
 
         {/* Section title */}
-        <h2 ref={titleRef} style={{
+        <h2 ref={titleRef} className="gsap-title" style={{
           color: '#f5f1e8', marginBottom: '3.5rem',
           display: 'flex', alignItems: 'center',
           fontSize: 'clamp(1.4rem, 5vw, 2.5rem)',

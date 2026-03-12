@@ -51,26 +51,31 @@ const Header = () => {
   // Entrance animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, {
-        y: -80,
-        opacity: 0,
+      // Pre-set initial states to prevent post-paint opacity flash
+      gsap.set(headerRef.current, { y: -80, opacity: 0 });
+      gsap.set(logoRef.current, { scale: 0.6, opacity: 0 });
+
+      gsap.to(headerRef.current, {
+        y: 0,
+        opacity: 1,
         duration: 1,
         ease: 'power3.out',
       });
 
-      gsap.from(logoRef.current, {
-        scale: 0.6,
-        opacity: 0,
+      gsap.to(logoRef.current, {
+        scale: 1,
+        opacity: 1,
         duration: 0.8,
         ease: 'back.out(1.7)',
         delay: 0.25,
       });
 
       const navItems = headerRef.current?.querySelectorAll('.nav-item');
-      if (navItems) {
-        gsap.from(navItems, {
-          y: -16,
-          opacity: 0,
+      if (navItems && navItems.length > 0) {
+        gsap.set(navItems, { y: -16, opacity: 0 });
+        gsap.to(navItems, {
+          y: 0,
+          opacity: 1,
           duration: 0.5,
           stagger: 0.08,
           ease: 'power2.out',

@@ -60,45 +60,35 @@ const Skills = () => {
 
     const ctx = gsap.context(() => {
       if (titleRef.current && sectionRef.current) {
-        gsap.from(titleRef.current, {
-          opacity: 0,
-          y: 60,
+        gsap.to(titleRef.current, {
+          opacity: 1,
+          y: 0,
           duration: 1.2,
           ease: 'power4.out',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-          },
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         });
       }
 
       if (skillItemRefs.current.length > 0) {
-        gsap.from(skillItemRefs.current, {
-          opacity: 0,
-          y: 40,
+        // CSS sets opacity: 0 on .skill-item via .gsap-card; animate to visible
+        gsap.to(skillItemRefs.current, {
+          opacity: 1,
+          y: 0,
           duration: 0.7,
           stagger: 0.08,
           ease: 'back.out(1.4)',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-          },
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
         });
       }
 
       if (skillBarRefs.current.length > 0) {
+        // Width animates from 0 → inline %; immediateRender: true (default) sets 0 immediately
         gsap.from(skillBarRefs.current, {
           width: 0,
           duration: 1.2,
           ease: 'expo.out',
           stagger: 0.08,
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 65%',
-          },
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 65%' },
         });
       }
 
@@ -173,7 +163,7 @@ const Skills = () => {
         {/* Section Title */}
         <h2
           ref={titleRef}
-          className="section-title-mb"
+          className="section-title-mb gsap-title"
           style={{
             color: '#f5f1e8',
             marginBottom: '4rem',
@@ -272,7 +262,7 @@ const Skills = () => {
               {/* Skills */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'relative' }}>
                 {group.skills.map((skill, index) => (
-                  <div key={index} className="skill-item" ref={setSkillItemRef}>
+                  <div key={index} className="skill-item gsap-card" ref={setSkillItemRef}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                       <span style={{
                         color: '#e0dcd2',
